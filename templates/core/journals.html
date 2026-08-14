@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Journals — IRCCP{% endblock %}
+{% block content %}
+<div class="page-content-narrow">
+  <div class="section-heading">
+    <h2 class="serif">Scientific Journals</h2>
+    <p>Peer-reviewed journals publishing research in civil protection disciplines</p>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cat-filter-row">
+    <a href="{% url 'core:journals' %}" class="cat-filter {% if not active_cat %}active-all{% endif %}">All</a>
+    {% for value, label in categories %}
+      {% cat_config value "hex" as chex %}{% cat_config value "bg" as cbg %}
+      <a href="?cat={{ value|urlencode }}" class="cat-filter-cat"
+         style="{% if active_cat == value %}background:{{ chex }};color:#fff;border-color:{{ chex }};{% else %}background:{{ cbg }};color:{{ chex }};border-color:{{ chex }}44;{% endif %}">
+        {% cat_icon value 11 %} {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="grid grid-3">
+    {% for j in journals %}
+      {% cat_config j.cat "hex" as jhex %}{% cat_config j.cat "bg" as jbg %}
+      <div class="journal-card">
+        <div class="row">
+          <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
+          {% if j.if_ != "—" %}<span class="if-badge">IF {{ j.if_ }}</span>{% endif %}
+        </div>
+        <h3>{{ j.title }}</h3>
+        <p class="pub">{{ j.pub }}</p>
+        <p class="desc">{{ j.desc }}</p>
+        <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="visit">{% icon 'external' 11 %} Visit Journal</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

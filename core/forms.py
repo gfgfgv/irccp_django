@@ -1,0 +1,100 @@
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
+
+from .models import Category, Publication, Researcher
+
+TEXT_INPUT_CLS = "form-input"
+TEXTAREA_CLS = "form-input form-textarea"
+SELECT_CLS = "form-input form-select"
+
+
+class EmailLoginForm(AuthenticationForm):
+    """Standard Django auth form, but styled and labelled 'Email address'.
+
+    Django's User model authenticates by username; on registration we set the
+    username equal to the email address, so users can log in with their email.
+    """
+
+    username = forms.CharField(
+        label="Email address",
+        widget=forms.EmailInput(attrs={"class": TEXT_INPUT_CLS, "autofocus": True}),
+    )
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={"class": TEXT_INPUT_CLS}),
+    )
+
+    error_messages = {
+        "invalid_login": "Invalid email or password.",
+        "inactive": "This account is inactive.",
+    }
+
+
+class RegisterForm(UserCreationForm):
+    name = forms.CharField(label="Full Name", max_length=150,
+                            widget=forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "Dr. Jane Smith"}))
+    workplace = forms.CharField(label="Place of Work / Institution", max_length=255, required=False,
+                                 widget=forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "University / Research Institute / Agency"}))
+    interests = forms.CharField(label="Scientific Interests", required=False,
+                                 widget=forms.Textarea(attrs={"class": TEXTAREA_CLS, "rows": 3, "placeholder": "Describe your research areas and scientific interests..."}))
+    email = forms.EmailField(label="Email Address",
+                              widget=forms.EmailInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "researcher@institution.edu"}))
+    phone = forms.CharField(label="Phone Number", max_length=50, required=False,
+                             widget=forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "+1 234 567 8900"}))
+    photo = forms.ImageField(label="Profile Photo", required=False)
+
+    class Meta:
+        model = User
+        fields = ["name", "workplace", "interests", "email", "phone", "photo", "password1", "password2"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["password1"].widget.attrs.update({"class": TEXT_INPUT_CLS, "placeholder": "Create a password"})
+        self.fields["password1"].label = "Password"
+        self.fields["password1"].help_text = None
+        del self.fields["password2"]
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("An account with this email already exists.")
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data["email"]
+        user.email = self.cleaned_data["email"]
+        full_name = self.cleaned_data["name"].strip()
+        parts = full_name.split(" ", 1)
+        user.first_name = parts[0]
+        user.last_name = parts[1] if len(parts) > 1 else ""
+        if commit:
+            user.save()
+            Researcher.objects.create(
+                user=user,
+                workplace=self.cleaned_data.get("workplace", ""),
+                interests=self.cleaned_data.get("interests", ""),
+                phone=self.cleaned_data.get("phone", ""),
+                photo=self.cleaned_data.get("photo"),
+            )
+        return user
+
+
+class PublicationUploadForm(forms.ModelForm):
+    class Meta:
+        model = Publication
+        fields = ["title", "category", "abstract", "doi", "file"]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "Full title of the article or paper"}),
+            "category": forms.Select(attrs={"class": SELECT_CLS}),
+            "abstract": forms.Textarea(attrs={"class": TEXTAREA_CLS, "rows": 5, "placeholder": "Provide a concise summary of your research (objectives, methods, findings)..."}),
+            "doi": forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "https://doi.org/10.xxxx/xxxxx"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["category"].choices = [("", "Select a research category...")] + list(Category.choices)
+        self.fields["category"].required = True
+        self.fields["file"].required = False
+        self.fields["doi"].required = False

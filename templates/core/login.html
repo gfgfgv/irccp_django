@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Sign In — IRCCP{% endblock %}
+{% block content %}
+<div class="form-page-wrap">
+  <div class="form-panel">
+    <div class="form-panel-head">
+      <h2 class="serif">Sign In</h2>
+    </div>
+    {% if form.non_field_errors %}
+      <div class="form-error">{% for error in form.non_field_errors %}{{ error }}{% endfor %}</div>
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-field">
+        <label for="id_username">Email address</label>
+        {{ form.username }}
+      </div>
+      <div class="form-field">
+        <label for="id_password">Password</label>
+        {{ form.password }}
+      </div>
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:.5rem;">Sign In</button>
+    </form>
+    <p class="form-subtext">No account? <a href="{% url 'core:register' %}">Register here</a></p>
+  </div>
+</div>
+{% endblock %}

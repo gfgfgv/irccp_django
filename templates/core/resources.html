@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Resources — IRCCP{% endblock %}
+{% block content %}
+<div class="page-content-narrow">
+  <div class="section-heading">
+    <h2 class="serif">Useful Resources</h2>
+    <p>Curated links to leading international organizations in civil protection and emergency management</p>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cat-filter-row">
+    <a href="{% url 'core:resources' %}" class="cat-filter {% if not active_cat %}active-all{% endif %}">All Categories</a>
+    {% for value, label in categories %}
+      {% cat_config value "hex" as chex %}{% cat_config value "bg" as cbg %}
+      <a href="?cat={{ value|urlencode }}" class="cat-filter-cat"
+         style="{% if active_cat == value %}background:{{ chex }};color:#fff;border-color:{{ chex }};{% else %}background:{{ cbg }};color:{{ chex }};border-color:{{ chex }}44;{% endif %}">
+        {% cat_icon value 11 %} {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="grid grid-2">
+    {% for r in resources %}
+      {% cat_config r.cat "hex" as rhex %}{% cat_config r.cat "bg" as rbg %}
+      <div class="resource-card">
+        <img src="https://images.unsplash.com/{{ r.img }}?w=200&h=160&fit=crop&auto=format" alt="{{ r.name }}">
+        <div class="resource-body">
+          <span class="chip chip-xs" style="background:{{ rbg }};color:{{ rhex }};border-color:{{ rhex }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
+          <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="title">{{ r.name }} {% icon 'external' 11 %}</a>
+          <p>{{ r.desc }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

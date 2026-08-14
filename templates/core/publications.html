@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Publications — IRCCP{% endblock %}
+{% block content %}
+<div class="page-content-narrow">
+
+  <div class="section-header-row">
+    <div class="section-heading" style="margin-bottom:0;">
+      <h2 class="serif">Research Publications</h2>
+      <p>{{ total_count }} publication{{ total_count|pluralize }} in the database</p>
+      <div class="rule"></div>
+    </div>
+    {% if user.is_authenticated %}
+      <a href="{% url 'core:upload' %}" class="btn btn-accent">{% icon 'plus' 16 %} Upload Publication</a>
+    {% else %}
+      <a href="{% url 'core:login' %}" class="btn btn-accent">{% icon 'plus' 16 %} Upload Publication</a>
+    {% endif %}
+  </div>
+
+  <form method="get" class="filters-bar">
+    <div class="search-box" style="flex:1;">
+      {% icon 'search' 16 %}
+      <input type="text" name="q" value="{{ query }}" placeholder="Search by title, abstract, or author...">
+    </div>
+    {% if active_cat %}<input type="hidden" name="cat" value="{{ active_cat }}">{% endif %}
+  </form>
+
+  <div class="cat-filter-row">
+    <a href="?{% if query %}q={{ query|urlencode }}{% endif %}" class="cat-filter {% if not active_cat %}active-all{% endif %}">All Categories</a>
+    {% for value, label in categories %}
+      {% cat_config value "hex" as chex %}{% cat_config value "bg" as cbg %}
+      <a href="?cat={{ value|urlencode }}{% if query %}&q={{ query|urlencode }}{% endif %}"
+         class="cat-filter-cat"
+         style="{% if active_cat == value %}background:{{ chex }};color:#fff;border-color:{{ chex }};{% else %}background:{{ cbg }};color:{{ chex }};border-color:{{ chex }}44;{% endif %}">
+        {% cat_icon value 11 %} {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if not publications %}
+    <div class="empty-state">
+      {% icon 'book' 40 %}
+      {% if total_count == 0 %}
+        <p class="title">No publications yet.</p>
+        <p class="sub">Be the first to upload a research paper.</p>
+        <a href="{% if user.is_authenticated %}{% url 'core:upload' %}{% else %}{% url 'core:login' %}{% endif %}" class="btn btn-primary" style="margin-top:1rem;display:inline-flex;">
+          {% icon 'upload' 14 %} Upload the First Publication
+        </a>
+      {% else %}
+        <p class="title">No publications match your search.</p>
+        <p class="sub">Try adjusting your filters.</p>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="grid grid-2">
+      {% for pub in publications %}
+        <div class="card">
+          <div class="card-row">
+            {% cat_config pub.category "hex" as phex %}{% cat_config pub.category "bg" as pbg %}
+            <span class="chip" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">{% cat_icon pub.category 12 %} {{ pub.category }}</span>
+            <span class="muted-date">{% icon 'clock' 11 %} {{ pub.uploaded_at|date:"j M Y" }}</span>
+          </div>
+          <h3 class="card-title">{{ pub.title }}</h3>
+          <p class="card-abstract">{{ pub.abstract|truncatewords:30 }}</p>
+          <div class="card-foot">
+            <div class="card-meta">{% icon 'user' 11 %} <strong style="color:var(--foreground);">{{ pub.author.name }}</strong>{% if pub.institution %} · {{ pub.institution }}{% endif %}</div>
+            {% if pub.doi %}
+              <a href="{{ pub.doi }}" target="_blank" rel="noopener noreferrer" style="font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.25rem;">{% icon 'external' 11 %} DOI</a>
+            {% elif pub.file %}
+              <a href="{{ pub.file.url }}" target="_blank" rel="noopener noreferrer" style="font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.25rem;">{% icon 'external' 11 %} File</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

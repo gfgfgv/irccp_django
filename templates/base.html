@@ -1,0 +1,113 @@
+{% load static core_extras %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}IRCCP — International Research Center of Civil Protection{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="page-body">
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="{% url 'core:home' %}" class="brand">
+          {% site_logo as logo_url %}
+          {% if logo_url %}
+            <span class="brand-badge" style="background:#fff;padding:2px;"><img src="{{ logo_url }}" alt="IRCCP" style="width:100%;height:100%;object-fit:contain;border-radius:.4rem;"></span>
+          {% else %}
+            <span class="brand-badge">{% icon 'image' 14 %}</span>
+          {% endif %}
+          <span class="brand-name serif">IRCCP</span>
+        </a>
+
+        <div class="nav-links">
+          {% url 'core:home' as home_url %}
+          {% url 'core:publications' as pubs_url %}
+          {% url 'core:researchers' as res_url %}
+          {% url 'core:resources' as resc_url %}
+          {% url 'core:journals' as jour_url %}
+          <a href="{{ home_url }}" class="nav-link {% if request.path == home_url %}active{% endif %}">Home</a>
+          <a href="{{ pubs_url }}" class="nav-link {% if request.path == pubs_url %}active{% endif %}">Publications</a>
+          <a href="{{ res_url }}" class="nav-link {% if request.path == res_url %}active{% endif %}">Researchers</a>
+          <a href="{{ resc_url }}" class="nav-link {% if request.path == resc_url %}active{% endif %}">Resources</a>
+          <a href="{{ jour_url }}" class="nav-link {% if request.path == jour_url %}active{% endif %}">Journals</a>
+        </div>
+
+        <div class="nav-auth">
+          {% if user.is_authenticated %}
+            <div class="nav-user">
+              <span class="nav-avatar">
+                {% if user.researcher.photo %}
+                  <img src="{{ user.researcher.photo.url }}" alt="{{ user.researcher.name }}">
+                {% else %}
+                  {% icon 'user' 14 %}
+                {% endif %}
+              </span>
+              <span>{{ user.researcher.name|split_first }}</span>
+            </div>
+            <form method="post" action="{% url 'core:logout' %}" style="display:inline">
+              {% csrf_token %}
+              <button type="submit" class="icon-btn" title="Log out">{% icon 'logout' 16 %}</button>
+            </form>
+          {% else %}
+            <a href="{% url 'core:login' %}" class="btn-ghost-white">Sign In</a>
+            <a href="{% url 'core:register' %}" class="btn-gold">Register</a>
+          {% endif %}
+          <button type="button" class="menu-toggle" id="menuToggle">{% icon 'menu' 20 %}</button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="{% url 'core:home' %}">Home</a>
+        <a href="{% url 'core:publications' %}">Publications</a>
+        <a href="{% url 'core:researchers' %}">Researchers</a>
+        <a href="{% url 'core:resources' %}">Resources</a>
+        <a href="{% url 'core:journals' %}">Journals</a>
+      </div>
+    </nav>
+
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="msg {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <main class="page-main">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <h3 class="serif">IRCCP</h3>
+            <p>International Research Center of Civil Protection — advancing scientific research for a safer world across all civil protection disciplines.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+              <li><a href="{% url 'core:home' %}">Home</a></li>
+              <li><a href="{% url 'core:publications' %}">Publications</a></li>
+              <li><a href="{% url 'core:researchers' %}">Researchers</a></li>
+              <li><a href="{% url 'core:resources' %}">Resources</a></li>
+              <li><a href="{% url 'core:journals' %}">Journals</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Categories</h4>
+            <ul>
+              {% for value, label in CATEGORY_CHOICES %}<li>{{ label }}</li>{% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">&copy; {% now "Y" %} International Research Center of Civil Protection. All rights reserved.</div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

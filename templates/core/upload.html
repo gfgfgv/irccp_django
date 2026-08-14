@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Upload Publication — IRCCP{% endblock %}
+{% block content %}
+<div class="form-page-wrap">
+  <div class="form-panel">
+    <div class="form-panel-head">
+      <div>
+        <h2 class="serif">Upload Publication</h2>
+        <p>Submit as {{ user.researcher.name }}</p>
+      </div>
+    </div>
+
+    {% if form.non_field_errors or form.errors %}
+      <div class="form-error">
+        {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+        {% for field in form %}{% for error in field.errors %}{{ field.label }}: {{ error }}<br>{% endfor %}{% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-field">
+        <label for="id_title">Publication Title *</label>
+        {{ form.title }}
+      </div>
+      <div class="form-field">
+        <label for="id_category">Category *</label>
+        {{ form.category }}
+      </div>
+      <div class="form-field">
+        <label for="id_abstract">Abstract *</label>
+        {{ form.abstract }}
+      </div>
+      <div class="form-field">
+        <label for="id_doi">DOI or URL (optional)</label>
+        {{ form.doi }}
+      </div>
+      <div class="form-field">
+        <label for="id_file">Attach file (optional, PDF)</label>
+        {{ form.file }}
+      </div>
+      <button type="submit" class="btn btn-accent btn-block" style="margin-top:.5rem;">{% icon 'upload' 16 %} Submit Publication</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

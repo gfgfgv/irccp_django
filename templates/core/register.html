@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Register — IRCCP{% endblock %}
+{% block content %}
+<div class="form-page-wrap" style="max-width:36rem;">
+  <div class="form-panel">
+    <div class="form-panel-head">
+      <div>
+        <h2 class="serif">Researcher Registration</h2>
+        <p>Join the International Research Center of Civil Protection</p>
+      </div>
+    </div>
+
+    {% if form.non_field_errors or form.errors %}
+      <div class="form-error">
+        {% for error in form.non_field_errors %}{{ error }}<br>{% endfor %}
+        {% for field in form %}{% for error in field.errors %}{{ field.label }}: {{ error }}<br>{% endfor %}{% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="photo-upload-row">
+        <div class="photo-circle" id="photoPreview">{% load core_extras %}{% icon 'camera' 24 %}</div>
+        <div>
+          <p style="font-size:.875rem;font-weight:500;margin:0;">Profile Photo</p>
+          <p style="font-size:.75rem;color:var(--muted-foreground);margin:.15rem 0 .5rem;">Upload a professional photo (JPG, PNG)</p>
+          <label for="id_photo" class="btn-choose">Choose Photo</label>
+        </div>
+      </div>
+      <div style="display:none;">{{ form.photo }}</div>
+
+      <div class="form-field">
+        <label for="id_name">Full Name *</label>
+        {{ form.name }}
+      </div>
+      <div class="form-field">
+        <label for="id_workplace">Place of Work / Institution</label>
+        {{ form.workplace }}
+      </div>
+      <div class="form-field">
+        <label for="id_interests">Scientific Interests</label>
+        {{ form.interests }}
+      </div>
+      <div class="form-row-2">
+        <div class="form-field">
+          <label for="id_email">Email Address *</label>
+          {{ form.email }}
+        </div>
+        <div class="form-field">
+          <label for="id_phone">Phone Number</label>
+          {{ form.phone }}
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="id_password1">Password *</label>
+        {{ form.password1 }}
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:.5rem;">Create Researcher Account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  // ensure the visible "Choose Photo" label triggers the hidden file input
+  document.addEventListener("DOMContentLoaded", function () {
+    var input = document.getElementById("id_photo");
+    if (input) { input.classList.add("visually-hidden"); }
+  });
+</script>
+{% endblock %}

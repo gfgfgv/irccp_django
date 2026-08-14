@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Researchers — IRCCP{% endblock %}
+{% block content %}
+<div class="page-content-narrow">
+
+  <div class="section-header-row">
+    <div class="section-heading" style="margin-bottom:0;">
+      <h2 class="serif">Scientific Community</h2>
+      <p>{{ total_count }} registered researcher{{ total_count|pluralize }} in the IRCCP network</p>
+      <div class="rule"></div>
+    </div>
+  </div>
+
+  <form method="get" class="search-box" style="max-width:28rem;margin-bottom:2rem;">
+    {% icon 'search' 16 %}
+    <input type="text" name="q" value="{{ query }}" placeholder="Search researchers by name, institution...">
+  </form>
+
+  {% if not researchers %}
+    <div class="empty-state">
+      {% icon 'users' 40 %}
+      <p class="title">{% if total_count == 0 %}No researchers registered yet.{% else %}No researchers match your search.{% endif %}</p>
+    </div>
+  {% else %}
+    <div class="grid grid-3">
+      {% for r in researchers %}
+        {% badge_for r.publication_count as badge %}
+        <div class="researcher-card">
+          <div class="researcher-head">
+            <div class="researcher-avatar">
+              {% if r.photo %}<img src="{{ r.photo.url }}" alt="{{ r.name }}">{% else %}{% icon 'user' 22 %}{% endif %}
+            </div>
+            <div style="flex:1;min-width:0;">
+              <h3 class="researcher-name">{{ r.name }}</h3>
+              <p class="researcher-workplace">{% icon 'building' 10 %} {{ r.workplace|default:"—" }}</p>
+              <div style="margin-top:.5rem;">
+                {% if badge %}
+                  {% badge_color badge.tier "bg" as bbg %}{% badge_color badge.tier "text" as btext %}{% badge_color badge.tier "border" as bborder %}
+                  <span class="badge-chip" style="background:{{ bbg }};color:{{ btext }};border-color:{{ bborder }};">{% icon 'award' 12 %} {{ badge.label }}</span>
+                {% else %}
+                  <span style="font-size:.75rem;color:var(--muted-foreground);">{{ r.publication_count }} publication{{ r.publication_count|pluralize }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          {% if badge %}
+            <div class="researcher-badge-box">
+              <div class="badge-icon" style="border-color:{{ bborder }};color:{{ btext }};background:{{ bbg }};">{% icon 'award' 14 %}BADGE</div>
+              <div>
+                <p style="font-size:.75rem;font-weight:600;margin:0;color:{{ btext }};">{{ badge.label }}</p>
+                <p style="font-size:.625rem;color:var(--muted-foreground);margin:0;">{{ r.publication_count }} paper{{ r.publication_count|pluralize }} submitted · Photo TBA</p>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if r.interests %}<p class="researcher-interests">&ldquo;{{ r.interests|truncatewords:20 }}&rdquo;</p>{% endif %}
+
+          <div class="researcher-contacts">
+            {% if r.user.email %}<a href="mailto:{{ r.user.email }}">{% icon 'mail' 11 %} {{ r.user.email }}</a>{% endif %}
+            {% if r.phone %}<p>{% icon 'phone' 11 %} {{ r.phone }}</p>{% endif %}
+          </div>
+          <p class="researcher-joined">Joined {{ r.joined_at|date:"j M Y" }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

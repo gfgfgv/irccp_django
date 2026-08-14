@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}IRCCP — Home{% endblock %}
+{% block content %}
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-flex">
+      <div class="hero-logo">
+        {% site_logo as logo_url %}
+        {% if logo_url %}
+          <img src="{{ logo_url }}" alt="IRCCP" style="width:100%;height:100%;object-fit:contain;border-radius:.5rem;">
+        {% else %}
+          {% icon 'image' 28 %}
+          <span>Your Logo Here</span>
+        {% endif %}
+      </div>
+      <div class="hero-text">
+        <div class="hero-pill">{% icon 'globe' 12 %} International Scientific Institution</div>
+        <h1 class="hero-title serif">International Research Center<br><span class="gold">of Civil Protection</span></h1>
+        <p class="hero-lede">Advancing scientific research in fire safety, CBRN defence, explosive ordnance disposal, disaster medicine, and environmental safety for a safer world.</p>
+        <div class="hero-actions">
+          {% if user.is_authenticated %}
+            <a href="{% url 'core:upload' %}" class="btn btn-accent">{% icon 'upload' 16 %} Upload Publication</a>
+          {% else %}
+            <a href="{% url 'core:login' %}" class="btn btn-accent">{% icon 'upload' 16 %} Upload Publication</a>
+          {% endif %}
+          <a href="{% url 'core:publications' %}" class="btn btn-outline">{% icon 'book' 16 %} Browse Research</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="value mono">{{ stats.publications }}</div><div class="label">Publications</div></div>
+        <div class="hero-stat"><div class="value mono">{{ stats.categories }}</div><div class="label">Categories</div></div>
+        <div class="hero-stat"><div class="value mono">{{ stats.journals }}</div><div class="label">Journals</div></div>
+        <div class="hero-stat"><div class="value mono">{{ stats.resources }}</div><div class="label">Resources</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="news-banner">
+  <div class="news-banner-inner">
+    {% icon 'newspaper' 13 %}
+    <span>AI-curated news feed — updated automatically with the latest civil protection research and policy developments</span>
+  </div>
+</div>
+
+<div class="page-content">
+
+  <section>
+    <div class="section-heading">
+      <h2 class="serif">Research Categories</h2>
+      <p>Select a discipline to explore publications and resources</p>
+      <div class="rule"></div>
+    </div>
+    <div class="grid grid-cats">
+      {% for c in categories %}
+        <a href="{% url 'core:publications' %}?cat={{ c.value|urlencode }}" class="cat-card" style="background:{{ c.bg }}; border-color:{{ c.hex }}30;">
+          <div class="cat-icon" style="background:{{ c.hex }}18; border-color:{{ c.hex }}30; color:{{ c.hex }};">{% cat_icon c.value 24 %}</div>
+          <h3>{{ c.label }}</h3>
+          <p>{{ c.desc }}</p>
+          <div class="cat-footer" style="color:{{ c.hex }};">
+            <span>{{ c.count }} publication{{ c.count|pluralize }}</span>
+            {% icon 'chevron-right' 14 %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% if publications_top %}
+  <section>
+    <div class="section-header-row">
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Latest Publications</h2>
+        <p>Most recently submitted research papers</p>
+        <div class="rule"></div>
+      </div>
+      <a href="{% url 'core:publications' %}" style="font-size:.875rem;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:.25rem;">View all {% icon 'arrow-right' 14 %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for pub in publications_top %}
+        {% cat_config pub.category "hex" as phex %}{% cat_config pub.category "bg" as pbg %}
+        <a href="{% url 'core:publications' %}?cat={{ pub.category|urlencode }}" class="home-section-card">
+          <div class="card-color-block" style="background:{{ pbg }};color:{{ phex }};">{% cat_icon pub.category 40 %}</div>
+          <div class="body">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="chip chip-xs" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">{% cat_icon pub.category 10 %} {{ pub.category }}</span>
+              <span style="font-size:.625rem;color:var(--muted-foreground);">{{ pub.uploaded_at|date:"j M Y" }}</span>
+            </div>
+            <h3>{{ pub.title|truncatechars:70 }}</h3>
+            <p>{{ pub.author.name }}{% if pub.institution %} · {{ pub.institution }}{% endif %}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if publications_rest %}
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for pub in publications_rest %}
+        {% cat_config pub.category "hex" as phex2 %}{% cat_config pub.category "bg" as pbg2 %}
+        <a href="{% url 'core:publications' %}?cat={{ pub.category|urlencode }}" class="home-section-row">
+          <div class="card-color-block-sm" style="background:{{ pbg2 }};color:{{ phex2 }};">{% cat_icon pub.category 26 %}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <span class="chip chip-xs" style="background:{{ pbg2 }};color:{{ phex2 }};border-color:{{ phex2 }}44;">{% cat_icon pub.category 10 %} {{ pub.category }}</span>
+              <span style="font-size:.625rem;color:var(--muted-foreground);">{{ pub.uploaded_at|date:"j M Y" }}</span>
+            </div>
+            <h3>{{ pub.title|truncatechars:70 }}</h3>
+            <p>{{ pub.author.name }}{% if pub.institution %} · {{ pub.institution }}{% endif %}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if researchers_top %}
+  <section>
+    <div class="section-header-row">
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Researchers</h2>
+        <p>Recently joined members of the IRCCP scientific community</p>
+        <div class="rule"></div>
+      </div>
+      <a href="{% url 'core:researchers' %}" style="font-size:.875rem;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:.25rem;">View all {% icon 'arrow-right' 14 %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for r in researchers_top %}
+        {% badge_for r.publication_count as rbadge %}
+        <a href="{% url 'core:researchers' %}" class="home-section-card">
+          {% if r.photo %}
+            <img src="{{ r.photo.url }}" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          {% else %}
+            <div class="card-color-block" style="background:var(--muted);color:var(--muted-foreground);">{% icon 'user' 28 %}</div>
+          {% endif %}
+          <div class="body">
+            <h3>{{ r.name }}</h3>
+            <p>{{ r.workplace|default:"—" }}</p>
+            {% if rbadge %}
+              {% badge_color rbadge.tier "bg" as rbg %}{% badge_color rbadge.tier "text" as rtext %}{% badge_color rbadge.tier "border" as rborder %}
+              <span class="badge-chip" style="margin-top:.5rem;background:{{ rbg }};color:{{ rtext }};border-color:{{ rborder }};">{% icon 'award' 11 %} {{ rbadge.label }}</span>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if researchers_rest %}
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for r in researchers_rest %}
+        <a href="{% url 'core:researchers' %}" class="home-section-row">
+          {% if r.photo %}
+            <img src="{{ r.photo.url }}" alt="{{ r.name }}" class="avatar-round" style="width:4rem;height:4rem;object-fit:cover;flex-shrink:0;">
+          {% else %}
+            <div class="card-color-block-sm" style="background:var(--muted);color:var(--muted-foreground);border-radius:50%;">{% icon 'user' 18 %}</div>
+          {% endif %}
+          <div style="flex:1;min-width:0;">
+            <h3>{{ r.name }}</h3>
+            <p>{{ r.workplace|default:"—" }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if resources_top %}
+  <section>
+    <div class="section-header-row">
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Useful Resources</h2>
+        <p>Links to leading international organizations in civil protection</p>
+        <div class="rule"></div>
+      </div>
+      <a href="{% url 'core:resources' %}" style="font-size:.875rem;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:.25rem;">View all {% icon 'arrow-right' 14 %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for r in resources_top %}
+        {% cat_config r.cat "hex" as rhex %}{% cat_config r.cat "bg" as rbg2 %}
+        <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
+          <img src="https://images.unsplash.com/{{ r.img }}?w=400&h=200&fit=crop&auto=format" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          <div class="body">
+            <span class="chip chip-xs" style="background:{{ rbg2 }};color:{{ rhex }};border-color:{{ rhex }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
+            <h3>{{ r.name|truncatechars:60 }}</h3>
+            <p>{{ r.desc|truncatechars:70 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if resources_rest %}
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for r in resources_rest %}
+        {% cat_config r.cat "hex" as rhex2 %}{% cat_config r.cat "bg" as rbg3 %}
+        <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
+          <img src="https://images.unsplash.com/{{ r.img }}?w=160&h=128&fit=crop&auto=format" alt="{{ r.name }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
+          <div style="flex:1;min-width:0;">
+            <span class="chip chip-xs" style="background:{{ rbg3 }};color:{{ rhex2 }};border-color:{{ rhex2 }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
+            <h3>{{ r.name|truncatechars:60 }}</h3>
+            <p>{{ r.desc|truncatechars:70 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if journals_top %}
+  <section>
+    <div class="section-header-row">
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Scientific Journals</h2>
+        <p>Peer-reviewed journals publishing civil protection research</p>
+        <div class="rule"></div>
+      </div>
+      <a href="{% url 'core:journals' %}" style="font-size:.875rem;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:.25rem;">View all {% icon 'arrow-right' 14 %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for j in journals_top %}
+        {% cat_config j.cat "hex" as jhex %}{% cat_config j.cat "bg" as jbg %}
+        <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
+          <div class="card-color-block" style="background:{{ jbg }};color:{{ jhex }};">{% cat_icon j.cat 40 %}</div>
+          <div class="body">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
+              {% if j.if_ != "—" %}<span class="if-badge">IF {{ j.if_ }}</span>{% endif %}
+            </div>
+            <h3>{{ j.title }}</h3>
+            <p>{{ j.pub }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if journals_rest %}
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for j in journals_rest %}
+        {% cat_config j.cat "hex" as jhex2 %}{% cat_config j.cat "bg" as jbg2 %}
+        <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
+          <div class="card-color-block-sm" style="background:{{ jbg2 }};color:{{ jhex2 }};">{% cat_icon j.cat 26 %}</div>
+          <div style="flex:1;min-width:0;">
+            <span class="chip chip-xs" style="background:{{ jbg2 }};color:{{ jhex2 }};border-color:{{ jhex2 }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
+            <h3>{{ j.title }}</h3>
+            <p>{{ j.pub }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section>
+    <div class="section-heading">
+      <h2 class="serif">News &amp; Updates</h2>
+      <p>Latest developments in civil protection research and policy — curated by AI</p>
+      <div class="rule"></div>
+    </div>
+    <div class="grid grid-4">
+      {% for n in news_top %}
+        <a href="{% if n.source_url %}{{ n.source_url }}{% else %}#{% endif %}" {% if n.source_url %}target="_blank" rel="noopener noreferrer"{% endif %} class="news-card" style="display:block;">
+          {% if n.display_image %}<img src="{{ n.display_image }}" alt="{{ n.title }}">{% endif %}
+          <div class="news-card-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              {% cat_config n.category "hex" as nhex %}{% cat_config n.category "bg" as nbg %}
+              <span class="chip chip-xs" style="background:{{ nbg }};color:{{ nhex }};border-color:{{ nhex }}44;">{% cat_icon n.category 10 %} {{ n.category }}</span>
+              <span style="font-size:.625rem;color:var(--muted-foreground);">{{ n.date|date:"j M Y" }}</span>
+            </div>
+            <h3>{{ n.title }}</h3>
+            <p>{{ n.source }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for n in news_rest %}
+        <a href="{% if n.source_url %}{{ n.source_url }}{% else %}#{% endif %}" {% if n.source_url %}target="_blank" rel="noopener noreferrer"{% endif %} class="news-row" style="display:flex;">
+          {% if n.display_image %}<img src="{{ n.display_image }}" alt="{{ n.title }}">{% endif %}
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              {% cat_config n.category "hex" as nhex2 %}{% cat_config n.category "bg" as nbg2 %}
+              <span class="chip chip-xs" style="background:{{ nbg2 }};color:{{ nhex2 }};border-color:{{ nhex2 }}44;">{% cat_icon n.category 10 %} {{ n.category }}</span>
+              <span style="font-size:.625rem;color:var(--muted-foreground);">{{ n.date|date:"j M Y" }}</span>
+            </div>
+            <h3>{{ n.title }}</h3>
+            <p>{{ n.source }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}
