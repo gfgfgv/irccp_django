@@ -8,22 +8,34 @@ Django models backed by SQLite).
 
 from .models import Category
 
+# Real logo images sourced from Wikimedia Commons (stable, hotlink-friendly
+# URLs via Special:FilePath — used by many external sites for exactly this
+# purpose). Only filled in where a confirmed, clearly-identifiable official
+# logo file was found; everything else in RESOURCES/JOURNALS below falls
+# back to the built-in colored category icon in the templates.
+WIKIMEDIA_COMMONS = "https://commons.wikimedia.org/wiki/Special:FilePath/{}"
+WIKIMEDIA_DE = "https://de.wikipedia.org/wiki/Special:FilePath/{}"
+
 RESOURCES = [
     {"name": "FEMA – Federal Emergency Management Agency", "url": "https://www.fema.gov",
      "desc": "US federal agency for disaster response, recovery, and preparedness planning.",
-     "cat": Category.DISASTER_MEDICINE, "img": "photo-1573164574511-73c773193279"},
+     "cat": Category.DISASTER_MEDICINE, "img": "photo-1573164574511-73c773193279",
+     "logo_url": WIKIMEDIA_COMMONS.format("FEMA_logo.svg")},
     {"name": "European Civil Protection & Humanitarian Aid (ECHO)", "url": "https://civil-protection-humanitarian-aid.ec.europa.eu",
      "desc": "EU mechanism for civil protection and international humanitarian assistance.",
-     "cat": Category.DISASTER_MEDICINE, "img": "photo-1560520653-9e0e4c89eb11"},
+     "cat": Category.DISASTER_MEDICINE, "img": "photo-1560520653-9e0e4c89eb11",
+     "logo_url": WIKIMEDIA_COMMONS.format("CivilDefence.svg")},
     {"name": "ICDO – International Civil Defence Organisation", "url": "https://www.icdo.org",
      "desc": "Intergovernmental body promoting civil protection best practices worldwide.",
      "cat": Category.FIRE_SAFETY, "img": "photo-1621905251918-48416bd8575a"},
     {"name": "OPCW – Organisation for the Prohibition of Chemical Weapons", "url": "https://www.opcw.org",
      "desc": "International body implementing the Chemical Weapons Convention globally.",
-     "cat": Category.CBRN, "img": "photo-1582719508461-905c673771fd"},
+     "cat": Category.CBRN, "img": "photo-1582719508461-905c673771fd",
+     "logo_url": WIKIMEDIA_DE.format("OPCW-Logo.svg")},
     {"name": "IAEA – International Atomic Energy Agency", "url": "https://www.iaea.org",
      "desc": "UN body for peaceful nuclear applications, radiation safety, and emergency response.",
-     "cat": Category.CBRN, "img": "photo-1628348070889-cb656235b4eb"},
+     "cat": Category.CBRN, "img": "photo-1628348070889-cb656235b4eb",
+     "logo_url": WIKIMEDIA_COMMONS.format("International_Atomic_Energy_Agency_Logo.svg")},
     {"name": "UNDRR – UN Office for Disaster Risk Reduction", "url": "https://www.undrr.org",
      "desc": "UN body coordinating global disaster risk reduction and the Sendai Framework.",
      "cat": Category.DISASTER_MEDICINE, "img": "photo-1527515637462-cff94aca3584"},
@@ -38,7 +50,8 @@ RESOURCES = [
      "cat": Category.CBRN, "img": "photo-1554734867-bf3c00a49371"},
     {"name": "UNEP – Environment & Emergency Response", "url": "https://www.unep.org",
      "desc": "Rapid environmental assessment and response in humanitarian emergencies.",
-     "cat": Category.ENVIRONMENTAL_SAFETY, "img": "photo-1441974231531-c6227db76b6e"},
+     "cat": Category.ENVIRONMENTAL_SAFETY, "img": "photo-1441974231531-c6227db76b6e",
+     "logo_url": WIKIMEDIA_COMMONS.format("United_Nations_Environment_Programme_Logo.svg")},
     {"name": "CTBTO – Comprehensive Nuclear-Test-Ban Treaty Organization", "url": "https://www.ctbto.org",
      "desc": "International monitoring of nuclear tests and radiological incident detection.",
      "cat": Category.CBRN, "img": "photo-1564564321837-a57b7070ac4f"},
@@ -46,6 +59,15 @@ RESOURCES = [
      "desc": "Technical support for marine oil spill response and environmental protection.",
      "cat": Category.ENVIRONMENTAL_SAFETY, "img": "photo-1473341304170-971dccb5ac1e"},
 ]
+
+# Real publisher logos (also from Wikimedia Commons). A single journal
+# "cover" isn't a stable thing (it changes every issue), so we use each
+# publisher's official logo instead — the same approach most journal
+# directory sites use. Add more publishers here as you find good logos;
+# JOURNALS entries whose "pub" isn't listed here just keep the category icon.
+PUBLISHER_LOGOS = {
+    "Elsevier": WIKIMEDIA_COMMONS.format("Elsevier_wordmark.svg"),
+}
 
 JOURNALS = [
     {"title": "Fire Safety Journal", "pub": "Elsevier", "url": "https://www.sciencedirect.com/journal/fire-safety-journal",
@@ -87,3 +109,6 @@ JOURNALS = [
      "cat": Category.CBRN, "if_": "1.6",
      "desc": "Radiation protection, dosimetry, and radiological emergency response research."},
 ]
+
+for _journal in JOURNALS:
+    _journal["logo_url"] = PUBLISHER_LOGOS.get(_journal["pub"], "")

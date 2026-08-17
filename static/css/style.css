@@ -75,6 +75,12 @@ a { color: inherit; text-decoration: none; }
 .btn-ghost-white:hover { color: #fff; background: rgba(255,255,255,.1); }
 .btn-gold { background: var(--accent); color: #fff; font-size: .875rem; font-weight: 600; padding: .45rem 1rem; border-radius: .5rem; border: none; cursor: pointer; transition: opacity .15s; }
 .btn-gold:hover { opacity: .9; }
+.btn-donate {
+  display: inline-flex; align-items: center; gap: .35rem; background: #E0245E; color: #fff;
+  font-size: .8rem; font-weight: 600; padding: .4rem .8rem; border-radius: .5rem; border: none;
+  cursor: pointer; transition: opacity .15s, transform .15s;
+}
+.btn-donate:hover { opacity: .9; transform: translateY(-1px); }
 
 .menu-toggle { display: block; background: none; border: none; color: rgba(255,255,255,.7); padding: .35rem; cursor: pointer; }
 
@@ -138,11 +144,14 @@ a { color: inherit; text-decoration: none; }
 .hero-inner { position: relative; z-index: 1; max-width: 72rem; margin: 0 auto; padding: 4rem 1.5rem; width: 100%; }
 .hero-flex { display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
 .hero-logo {
-  width: 7rem; height: 7rem; border-radius: 1rem; border: 2px solid rgba(255,255,255,.2);
+  width: 11rem; height: 11rem; border-radius: 1.25rem; border: 2px solid rgba(255,255,255,.2);
   background: rgba(255,255,255,.05); display: flex; flex-direction: column; align-items: center;
   justify-content: center; color: rgba(255,255,255,.4); text-align: center; padding: .75rem; flex-shrink: 0;
 }
 .hero-logo span { font-size: .625rem; opacity: .6; margin-top: .25rem; }
+@media (min-width: 768px) {
+  .hero-logo { width: 13rem; height: 13rem; }
+}
 .hero-text { flex: 1; color: #fff; text-align: center; }
 .hero-pill {
   display: inline-flex; align-items: center; gap: .5rem; font-size: .75rem; font-weight: 500; color: rgba(255,255,255,.6);
@@ -237,11 +246,15 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Resource / journal cards ---------- */
 .resource-card { background: var(--card); border-radius: 1rem; border: 1px solid var(--border); overflow: hidden; display: flex; }
 .resource-card img { width: 7rem; object-fit: cover; flex-shrink: 0; }
+.resource-logo-box { width: 7rem; flex-shrink: 0; background: #fff; display: flex; align-items: center; justify-content: center; padding: 1rem; border-right: 1px solid var(--border); }
+.resource-logo-img { max-width: 100%; max-height: 4.5rem; object-fit: contain; }
 .resource-body { flex: 1; padding: 1.25rem; }
 .resource-body a.title { display: block; margin-top: .5rem; font-weight: 700; font-size: .875rem; color: var(--primary); line-height: 1.4; }
 .resource-body p { font-size: .75rem; color: var(--muted-foreground); margin-top: .35rem; line-height: 1.5; }
 
 .journal-card { background: var(--card); border-radius: 1rem; border: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; }
+.journal-logo-box { background: #fff; border: 1px solid var(--border); border-radius: .6rem; padding: .75rem; display: flex; align-items: center; justify-content: center; height: 3.5rem; margin-bottom: .75rem; }
+.journal-logo-img { max-width: 100%; max-height: 2rem; object-fit: contain; }
 .journal-card .row { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .75rem; }
 .if-badge { font-size: .625rem; font-weight: 600; background: rgba(184,132,30,.1); color: var(--accent); border: 1px solid rgba(184,132,30,.2); padding: .1rem .5rem; border-radius: 999px; flex-shrink: 0; }
 .journal-card h3 { font-weight: 700; font-size: .875rem; margin: 0 0 .3rem; }

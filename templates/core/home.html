@@ -38,7 +38,12 @@
   </div>
 </div>
 
-
+<div class="news-banner">
+  <div class="news-banner-inner">
+    {% icon 'newspaper' 13 %}
+    <span>AI-curated news feed — updated automatically with the latest civil protection research and policy developments</span>
+  </div>
+</div>
 
 <div class="page-content">
 
@@ -174,7 +179,11 @@
       {% for r in resources_top %}
         {% cat_config r.cat "hex" as rhex %}{% cat_config r.cat "bg" as rbg2 %}
         <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
-          <img src="https://images.unsplash.com/{{ r.img }}?w=400&h=200&fit=crop&auto=format" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          {% if r.logo_url %}
+            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ r.logo_url }}" alt="{{ r.name }}" class="resource-logo-img"></div>
+          {% else %}
+            <img src="https://images.unsplash.com/{{ r.img }}?w=400&h=200&fit=crop&auto=format" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          {% endif %}
           <div class="body">
             <span class="chip chip-xs" style="background:{{ rbg2 }};color:{{ rhex }};border-color:{{ rhex }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
             <h3>{{ r.name|truncatechars:60 }}</h3>
@@ -188,7 +197,11 @@
       {% for r in resources_rest %}
         {% cat_config r.cat "hex" as rhex2 %}{% cat_config r.cat "bg" as rbg3 %}
         <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
-          <img src="https://images.unsplash.com/{{ r.img }}?w=160&h=128&fit=crop&auto=format" alt="{{ r.name }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
+          {% if r.logo_url %}
+            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ r.logo_url }}" alt="{{ r.name }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
+          {% else %}
+            <img src="https://images.unsplash.com/{{ r.img }}?w=160&h=128&fit=crop&auto=format" alt="{{ r.name }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
+          {% endif %}
           <div style="flex:1;min-width:0;">
             <span class="chip chip-xs" style="background:{{ rbg3 }};color:{{ rhex2 }};border-color:{{ rhex2 }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
             <h3>{{ r.name|truncatechars:60 }}</h3>
@@ -215,7 +228,11 @@
       {% for j in journals_top %}
         {% cat_config j.cat "hex" as jhex %}{% cat_config j.cat "bg" as jbg %}
         <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
-          <div class="card-color-block" style="background:{{ jbg }};color:{{ jhex }};">{% cat_icon j.cat 40 %}</div>
+          {% if j.logo_url %}
+            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ j.logo_url }}" alt="{{ j.pub }}" class="resource-logo-img"></div>
+          {% else %}
+            <div class="card-color-block" style="background:{{ jbg }};color:{{ jhex }};">{% cat_icon j.cat 40 %}</div>
+          {% endif %}
           <div class="body">
             <div style="display:flex;align-items:center;justify-content:space-between;">
               <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
@@ -232,7 +249,11 @@
       {% for j in journals_rest %}
         {% cat_config j.cat "hex" as jhex2 %}{% cat_config j.cat "bg" as jbg2 %}
         <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
-          <div class="card-color-block-sm" style="background:{{ jbg2 }};color:{{ jhex2 }};">{% cat_icon j.cat 26 %}</div>
+          {% if j.logo_url %}
+            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ j.logo_url }}" alt="{{ j.pub }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
+          {% else %}
+            <div class="card-color-block-sm" style="background:{{ jbg2 }};color:{{ jhex2 }};">{% cat_icon j.cat 26 %}</div>
+          {% endif %}
           <div style="flex:1;min-width:0;">
             <span class="chip chip-xs" style="background:{{ jbg2 }};color:{{ jhex2 }};border-color:{{ jhex2 }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
             <h3>{{ j.title }}</h3>

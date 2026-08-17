@@ -79,6 +79,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.category_choices',
+                'core.context_processors.donate_url',
             ],
         },
     },
@@ -172,3 +173,10 @@ LOGOUT_REDIRECT_URL = 'core:home'
 # `python manage.py fetch_news`).
 RSS_AUTO_FETCH = True
 RSS_FETCH_INTERVAL_HOURS = 6
+
+# --- Donate button ---------------------------------------------------------
+# Points the navbar "Donate" button at your real payment page once you have
+# one. Change via the DONATE_URL environment variable — no code edit needed.
+# See README "Кнопка доната" for quick options (Buy Me a Coffee, Ko-fi,
+# PayPal.me) that need no business verification and take ~5 minutes to set up.
+DONATE_URL = os.environ.get('DONATE_URL', 'https://www.buymeacoffee.com/irccp')

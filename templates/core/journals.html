@@ -24,6 +24,9 @@
     {% for j in journals %}
       {% cat_config j.cat "hex" as jhex %}{% cat_config j.cat "bg" as jbg %}
       <div class="journal-card">
+        {% if j.logo_url %}
+          <div class="journal-logo-box"><img src="{{ j.logo_url }}" alt="{{ j.pub }}" class="journal-logo-img"></div>
+        {% endif %}
         <div class="row">
           <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
           {% if j.if_ != "—" %}<span class="if-badge">IF {{ j.if_ }}</span>{% endif %}

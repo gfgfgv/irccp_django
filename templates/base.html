@@ -34,6 +34,7 @@
         </div>
 
         <div class="nav-auth">
+          <a href="{{ DONATE_URL }}" target="_blank" rel="noopener noreferrer" class="btn-donate">{% icon 'heart' 14 %} Donate</a>
           {% if user.is_authenticated %}
             <div class="nav-user">
               <span class="nav-avatar">
@@ -63,6 +64,7 @@
         <a href="{% url 'core:researchers' %}">Researchers</a>
         <a href="{% url 'core:resources' %}">Resources</a>
         <a href="{% url 'core:journals' %}">Journals</a>
+        <a href="{{ DONATE_URL }}" target="_blank" rel="noopener noreferrer" style="color:#D4A830;">{% icon 'heart' 13 %} Donate</a>
       </div>
     </nav>
 

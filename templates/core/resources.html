@@ -24,7 +24,11 @@
     {% for r in resources %}
       {% cat_config r.cat "hex" as rhex %}{% cat_config r.cat "bg" as rbg %}
       <div class="resource-card">
-        <img src="https://images.unsplash.com/{{ r.img }}?w=200&h=160&fit=crop&auto=format" alt="{{ r.name }}">
+        {% if r.logo_url %}
+          <div class="resource-logo-box"><img src="{{ r.logo_url }}" alt="{{ r.name }}" class="resource-logo-img"></div>
+        {% else %}
+          <img src="https://images.unsplash.com/{{ r.img }}?w=200&h=160&fit=crop&auto=format" alt="{{ r.name }}">
+        {% endif %}
         <div class="resource-body">
           <span class="chip chip-xs" style="background:{{ rbg }};color:{{ rhex }};border-color:{{ rhex }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
           <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="title">{{ r.name }} {% icon 'external' 11 %}</a>
