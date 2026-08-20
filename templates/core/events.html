@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Events — IRCCP{% endblock %}
+{% block content %}
+<div class="page-content-narrow">
+  <div class="section-heading">
+    <h2 class="serif">Upcoming Events</h2>
+    <p>Conferences, exhibitions, and training events in civil protection</p>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cat-filter-row">
+    <a href="{% url 'core:events' %}" class="cat-filter {% if not active_cat %}active-all{% endif %}">All Categories</a>
+    {% for value, label in categories %}
+      {% cat_config value "hex" as chex %}{% cat_config value "bg" as cbg %}
+      <a href="?cat={{ value|urlencode }}" class="cat-filter-cat"
+         style="{% if active_cat == value %}background:{{ chex }};color:#fff;border-color:{{ chex }};{% else %}background:{{ cbg }};color:{{ chex }};border-color:{{ chex }}44;{% endif %}">
+        {% cat_icon value 11 %} {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if not events %}
+    <div class="empty-state">
+      {% icon 'clock' 40 %}
+      <p class="title">No events scheduled yet.</p>
+    </div>
+  {% else %}
+    <div class="grid grid-2">
+      {% for e in events %}
+        {% cat_config e.category "hex" as ehex %}{% cat_config e.category "bg" as ebg %}
+        <div class="event-card">
+          {% if e.display_image %}
+            <img src="{{ e.display_image }}" alt="{{ e.title }}" class="event-card-img">
+          {% endif %}
+          <div class="event-card-body">
+            <div class="card-row">
+              <span class="chip" style="background:{{ ebg }};color:{{ ehex }};border-color:{{ ehex }}44;">{% cat_icon e.category 12 %} {{ e.get_category_display }}</span>
+              <span class="muted-date">{% icon 'clock' 11 %} {{ e.date|date:"j M Y" }}{% if e.end_date %} – {{ e.end_date|date:"j M Y" }}{% endif %}</span>
+            </div>
+            <h3 class="card-title">{{ e.title }}</h3>
+            {% if e.location %}<p class="event-location">{% icon 'globe' 11 %} {{ e.location }}</p>{% endif %}
+            <p class="card-abstract">{{ e.desc }}</p>
+            {% if e.registration_url %}
+              <a href="{{ e.registration_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-accent" style="margin-top:.75rem;">{% icon 'external' 14 %} Register</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

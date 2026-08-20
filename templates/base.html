@@ -26,11 +26,15 @@
           {% url 'core:researchers' as res_url %}
           {% url 'core:resources' as resc_url %}
           {% url 'core:journals' as jour_url %}
+          {% url 'core:events' as events_url %}
+          {% url 'core:products' as products_url %}
           <a href="{{ home_url }}" class="nav-link {% if request.path == home_url %}active{% endif %}">Home</a>
           <a href="{{ pubs_url }}" class="nav-link {% if request.path == pubs_url %}active{% endif %}">Publications</a>
           <a href="{{ res_url }}" class="nav-link {% if request.path == res_url %}active{% endif %}">Researchers</a>
           <a href="{{ resc_url }}" class="nav-link {% if request.path == resc_url %}active{% endif %}">Resources</a>
           <a href="{{ jour_url }}" class="nav-link {% if request.path == jour_url %}active{% endif %}">Journals</a>
+          <a href="{{ events_url }}" class="nav-link {% if request.path == events_url %}active{% endif %}">Events</a>
+          <a href="{{ products_url }}" class="nav-link {% if request.path == products_url %}active{% endif %}">Products</a>
         </div>
 
         <div class="nav-auth">
@@ -64,6 +68,8 @@
         <a href="{% url 'core:researchers' %}">Researchers</a>
         <a href="{% url 'core:resources' %}">Resources</a>
         <a href="{% url 'core:journals' %}">Journals</a>
+        <a href="{% url 'core:events' %}">Events</a>
+        <a href="{% url 'core:products' %}">Products</a>
         <a href="{{ DONATE_URL }}" target="_blank" rel="noopener noreferrer" style="color:#D4A830;">{% icon 'heart' 13 %} Donate</a>
       </div>
     </nav>
@@ -95,6 +101,8 @@
               <li><a href="{% url 'core:researchers' %}">Researchers</a></li>
               <li><a href="{% url 'core:resources' %}">Resources</a></li>
               <li><a href="{% url 'core:journals' %}">Journals</a></li>
+              <li><a href="{% url 'core:events' %}">Events</a></li>
+              <li><a href="{% url 'core:products' %}">Products</a></li>
             </ul>
           </div>
           <div class="footer-col">

@@ -9,9 +9,8 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
-from .data import JOURNALS, RESOURCES
 from .forms import EmailLoginForm, PublicationUploadForm, RegisterForm
-from .models import CATEGORY_CONFIG, Category, NewsItem, Publication, Researcher
+from .models import CATEGORY_CONFIG, Category, Company, Event, Journal, NewsItem, Publication, Researcher, Resource
 
 
 def _top_and_rest(items, top_count=4, rest_count=4):
@@ -23,17 +22,34 @@ def home(request):
     publications_list = list(Publication.objects.select_related("author__user")[:8])
     researchers_list = list(Researcher.objects.select_related("user").prefetch_related("publications")[:8])
     news_list = list(NewsItem.objects.all()[:8])
+    # Events: show upcoming ones first (soonest first); if there aren't 8
+    # upcoming, fill the rest with the most recent past events so the
+    # section isn't awkwardly empty right after a real event happens.
+    from django.utils.timezone import localdate
+    today = localdate()
+    upcoming_events = list(Event.objects.filter(date__gte=today).order_by("date"))
+    if len(upcoming_events) < 8:
+        past_events = list(Event.objects.filter(date__lt=today).order_by("-date")[:8 - len(upcoming_events)])
+        events_list = upcoming_events + past_events
+    else:
+        events_list = upcoming_events[:8]
 
-    # Resources/Journals are a static reference list (no "recent" concept), so
-    # we just show a random sample each time rather than pretending to rank them.
-    resources_list = random.sample(RESOURCES, min(8, len(RESOURCES)))
-    journals_list = random.sample(JOURNALS, min(8, len(JOURNALS)))
+    # Resources/Journals/Companies don't have a "recent" concept, so we just
+    # show a random sample each time rather than pretending to rank them.
+    all_resources = list(Resource.objects.all())
+    all_journals = list(Journal.objects.all())
+    all_companies = list(Company.objects.all())
+    resources_list = random.sample(all_resources, min(8, len(all_resources)))
+    journals_list = random.sample(all_journals, min(8, len(all_journals)))
+    companies_list = random.sample(all_companies, min(8, len(all_companies)))
 
     pub_top, pub_rest = _top_and_rest(publications_list)
     res_top, res_rest = _top_and_rest(researchers_list)
     resc_top, resc_rest = _top_and_rest(resources_list)
     jour_top, jour_rest = _top_and_rest(journals_list)
     news_top, news_rest = _top_and_rest(news_list)
+    event_top, event_rest = _top_and_rest(events_list)
+    company_top, company_rest = _top_and_rest(companies_list)
 
     context = {
         "publications_top": pub_top,
@@ -46,12 +62,16 @@ def home(request):
         "journals_rest": jour_rest,
         "news_top": news_top,
         "news_rest": news_rest,
+        "events_top": event_top,
+        "events_rest": event_rest,
+        "companies_top": company_top,
+        "companies_rest": company_rest,
         "categories": category_cards(),
         "stats": {
             "publications": Publication.objects.count(),
             "categories": len(Category.choices),
-            "journals": len(JOURNALS),
-            "resources": len(RESOURCES),
+            "journals": Journal.objects.count(),
+            "resources": Resource.objects.count(),
         },
     }
     return render(request, "core/home.html", context)
@@ -119,18 +139,42 @@ def researchers(request):
 
 def resources(request):
     cat = request.GET.get("cat", "").strip()
-    items = [r for r in RESOURCES if not cat or r["cat"] == cat]
-    context = {"resources": items, "active_cat": cat, "categories": Category.choices,
+    qs = Resource.objects.all()
+    if cat:
+        qs = qs.filter(category=cat)
+    context = {"resources": qs, "active_cat": cat, "categories": Category.choices,
                "category_config": CATEGORY_CONFIG}
     return render(request, "core/resources.html", context)
 
 
 def journals(request):
     cat = request.GET.get("cat", "").strip()
-    items = [j for j in JOURNALS if not cat or j["cat"] == cat]
-    context = {"journals": items, "active_cat": cat, "categories": Category.choices,
+    qs = Journal.objects.all()
+    if cat:
+        qs = qs.filter(category=cat)
+    context = {"journals": qs, "active_cat": cat, "categories": Category.choices,
                "category_config": CATEGORY_CONFIG}
     return render(request, "core/journals.html", context)
+
+
+def events(request):
+    cat = request.GET.get("cat", "").strip()
+    qs = Event.objects.all()
+    if cat:
+        qs = qs.filter(category=cat)
+    context = {"events": qs, "active_cat": cat, "categories": Category.choices,
+               "category_config": CATEGORY_CONFIG}
+    return render(request, "core/events.html", context)
+
+
+def products(request):
+    cat = request.GET.get("cat", "").strip()
+    qs = Company.objects.all()
+    if cat:
+        qs = qs.filter(category=cat)
+    context = {"companies": qs, "active_cat": cat, "categories": Category.choices,
+               "category_config": CATEGORY_CONFIG}
+    return render(request, "core/products.html", context)
 
 
 class EmailLoginView(LoginView):

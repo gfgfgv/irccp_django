@@ -52,10 +52,10 @@ a { color: inherit; text-decoration: none; }
 }
 .brand-name { font-weight: 700; font-size: .9rem; }
 
-.nav-links { display: none; align-items: center; gap: .25rem; }
+.nav-links { display: none; align-items: center; gap: .1rem; }
 .nav-link {
-  padding: .5rem .75rem; border-radius: .5rem; font-size: .875rem; font-weight: 500;
-  color: rgba(255,255,255,.6); background: none; border: none; cursor: pointer; transition: all .15s;
+  padding: .5rem .6rem; border-radius: .5rem; font-size: .8rem; font-weight: 500;
+  color: rgba(255,255,255,.6); background: none; border: none; cursor: pointer; transition: all .15s; white-space: nowrap;
 }
 .nav-link:hover { color: #fff; background: rgba(255,255,255,.08); }
 .nav-link.active { background: rgba(255,255,255,.15); color: #fff; }
@@ -230,6 +230,11 @@ a { color: inherit; text-decoration: none; }
 .news-row h3 { font-size: .875rem; font-weight: 600; margin: .25rem 0 0; }
 .news-row p { font-size: .75rem; color: var(--muted-foreground); margin: .1rem 0 0; }
 
+.event-card { background: var(--card); border-radius: 1rem; border: 1px solid var(--border); overflow: hidden; }
+.event-card-img { width: 100%; height: 11rem; object-fit: cover; display: block; }
+.event-card-body { padding: 1.25rem; }
+.event-location { font-size: .75rem; color: var(--muted-foreground); display: flex; align-items: center; gap: .3rem; margin: .1rem 0 .5rem; }
+
 /* Color-block placeholders for home-page section cards that have no photo
    (Publications, Journals) — same footprint as the News card/row images. */
 .card-color-block { width: 100%; height: 9rem; display: flex; align-items: center; justify-content: center; }
@@ -247,20 +252,12 @@ a { color: inherit; text-decoration: none; }
 .resource-card { background: var(--card); border-radius: 1rem; border: 1px solid var(--border); overflow: hidden; display: flex; }
 .resource-card img { width: 7rem; object-fit: cover; flex-shrink: 0; }
 .resource-logo-box { width: 7rem; flex-shrink: 0; background: #fff; display: flex; align-items: center; justify-content: center; padding: 1rem; border-right: 1px solid var(--border); }
-.resource-logo-img { max-width: 100%; max-height: 4.5rem; object-fit: contain; }
+.resource-logo-img { max-width: 100%; max-height: 8rem; object-fit: contain; }
 .resource-body { flex: 1; padding: 1.25rem; }
 .resource-body a.title { display: block; margin-top: .5rem; font-weight: 700; font-size: .875rem; color: var(--primary); line-height: 1.4; }
 .resource-body p { font-size: .75rem; color: var(--muted-foreground); margin-top: .35rem; line-height: 1.5; }
 
-.journal-card { background: var(--card); border-radius: 1rem; border: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; }
-.journal-logo-box { background: #fff; border: 1px solid var(--border); border-radius: .6rem; padding: .75rem; display: flex; align-items: center; justify-content: center; height: 3.5rem; margin-bottom: .75rem; }
-.journal-logo-img { max-width: 100%; max-height: 2rem; object-fit: contain; }
-.journal-card .row { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .75rem; }
 .if-badge { font-size: .625rem; font-weight: 600; background: rgba(184,132,30,.1); color: var(--accent); border: 1px solid rgba(184,132,30,.2); padding: .1rem .5rem; border-radius: 999px; flex-shrink: 0; }
-.journal-card h3 { font-weight: 700; font-size: .875rem; margin: 0 0 .3rem; }
-.journal-card .pub { font-size: .75rem; color: var(--muted-foreground); margin: 0 0 .25rem; }
-.journal-card .desc { font-size: .75rem; color: var(--muted-foreground); line-height: 1.5; flex: 1; }
-.journal-card .visit { margin-top: 1rem; font-size: .75rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; gap: .25rem; padding-top: .75rem; border-top: 1px solid var(--border); }
 
 /* ---------- Researchers ---------- */
 .researcher-card { background: var(--card); border-radius: 1rem; border: 1px solid var(--border); padding: 1.5rem; }

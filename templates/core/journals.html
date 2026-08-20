@@ -20,21 +20,22 @@
     {% endfor %}
   </div>
 
-  <div class="grid grid-3">
+  <div class="grid grid-2">
     {% for j in journals %}
-      {% cat_config j.cat "hex" as jhex %}{% cat_config j.cat "bg" as jbg %}
-      <div class="journal-card">
-        {% if j.logo_url %}
-          <div class="journal-logo-box"><img src="{{ j.logo_url }}" alt="{{ j.pub }}" class="journal-logo-img"></div>
+      {% cat_config j.category "hex" as jhex %}{% cat_config j.category "bg" as jbg %}
+      <div class="resource-card">
+        {% if j.display_logo %}
+          <div class="resource-logo-box"><img src="{{ j.display_logo }}" alt="{{ j.title }}" class="resource-logo-img"></div>
         {% endif %}
-        <div class="row">
-          <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
-          {% if j.if_ != "—" %}<span class="if-badge">IF {{ j.if_ }}</span>{% endif %}
+        <div class="resource-body">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;">
+            <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.category 10 %} {{ j.get_category_display }}</span>
+            {% if j.impact_factor != "—" %}<span class="if-badge">IF {{ j.impact_factor }}</span>{% endif %}
+          </div>
+          <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="title">{{ j.title }} {% icon 'external' 11 %}</a>
+          <p style="font-weight:600;color:var(--muted-foreground);margin-top:.15rem;font-size:.75rem;">{{ j.publisher }}</p>
+          <p>{{ j.desc }}</p>
         </div>
-        <h3>{{ j.title }}</h3>
-        <p class="pub">{{ j.pub }}</p>
-        <p class="desc">{{ j.desc }}</p>
-        <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="visit">{% icon 'external' 11 %} Visit Journal</a>
       </div>
     {% endfor %}
   </div>

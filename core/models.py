@@ -133,6 +133,145 @@ class NewsItem(models.Model):
         return self.image_url
 
 
+class Event(models.Model):
+    """A conference/exhibition/training event shown on the Events page —
+    a simple listing (title, date, location, description, external
+    registration link), admin-editable."""
+
+    title = models.CharField(max_length=255)
+    date = models.DateField()
+    end_date = models.DateField(blank=True, null=True, help_text="Leave blank for a single-day event.")
+    location = models.CharField(max_length=255, blank=True)
+    category = models.CharField(max_length=32, choices=Category.choices)
+    desc = models.TextField("Description")
+    registration_url = models.URLField("Registration / event page URL", blank=True)
+
+    image = models.ImageField("Uploaded image", upload_to="event_images/", blank=True, null=True)
+    image_url = models.URLField("External image URL", blank=True,
+                                 help_text="Used if no file is uploaded above.")
+
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first (ties broken by date).")
+
+    class Meta:
+        ordering = ["date", "order"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def display_image(self):
+        if self.image:
+            return self.image.url
+        return self.image_url
+
+
+class Company(models.Model):
+    """A commercial manufacturer/vendor shown on the Products page — company
+    card (logo, what they make, link to their site), admin-editable."""
+
+    name = models.CharField(max_length=255)
+    url = models.URLField("Website URL")
+    desc = models.TextField("Description", help_text="What the company makes/does.")
+    category = models.CharField(max_length=32, choices=Category.choices)
+
+    logo = models.ImageField("Uploaded logo", upload_to="company_logos/", blank=True, null=True)
+    logo_url = models.URLField("External logo URL", blank=True,
+                                help_text="Used if no file is uploaded above.")
+    fallback_image = models.ImageField("Uploaded fallback photo", upload_to="company_fallback/", blank=True, null=True)
+    fallback_image_url = models.URLField("External fallback photo URL", blank=True,
+                                          help_text="Shown only if no logo (file or URL) is set above.")
+
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
+
+    class Meta:
+        ordering = ["order", "name"]
+        verbose_name_plural = "Companies"
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def display_logo(self):
+        if self.logo:
+            return self.logo.url
+        return self.logo_url
+
+    @property
+    def display_fallback(self):
+        if self.fallback_image:
+            return self.fallback_image.url
+        return self.fallback_image_url
+
+
+class Resource(models.Model):
+    """An external organization/link shown on the Resources page (admin-editable,
+    replaces the old core/data.py RESOURCES list)."""
+
+    name = models.CharField(max_length=255)
+    url = models.URLField("Website URL")
+    desc = models.TextField("Description")
+    category = models.CharField(max_length=32, choices=Category.choices)
+
+    logo = models.ImageField("Uploaded logo", upload_to="resource_logos/", blank=True, null=True)
+    logo_url = models.URLField("External logo URL", blank=True,
+                                help_text="Used if no file is uploaded above (e.g. a Wikimedia Commons link).")
+    fallback_image = models.ImageField("Uploaded fallback photo", upload_to="resource_fallback/", blank=True, null=True)
+    fallback_image_url = models.URLField("External fallback photo URL", blank=True,
+                                          help_text="Shown only if no logo (file or URL) is set above.")
+
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
+
+    class Meta:
+        ordering = ["order", "name"]
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def display_logo(self):
+        if self.logo:
+            return self.logo.url
+        return self.logo_url
+
+    @property
+    def display_fallback(self):
+        if self.fallback_image:
+            return self.fallback_image.url
+        return self.fallback_image_url
+
+
+class Journal(models.Model):
+    """A scientific journal shown on the Journals page (admin-editable,
+    replaces the old core/data.py JOURNALS list)."""
+
+    title = models.CharField(max_length=255)
+    publisher = models.CharField(max_length=255)
+    url = models.URLField("Website URL")
+    category = models.CharField(max_length=32, choices=Category.choices)
+    impact_factor = models.CharField(max_length=20, blank=True, default="—")
+    desc = models.TextField("Description")
+
+    logo = models.ImageField("Cover / title page image", upload_to="journal_logos/", blank=True, null=True,
+                              help_text="A photo of the journal's cover or title page (or a publisher logo) — "
+                                        "shown as the card image, same style as the Resources page.")
+    logo_url = models.URLField("External cover / title page image URL", blank=True,
+                                help_text="Used if no file is uploaded above (e.g. a Wikimedia Commons link).")
+
+    order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first.")
+
+    class Meta:
+        ordering = ["order", "title"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def display_logo(self):
+        if self.logo:
+            return self.logo.url
+        return self.logo_url
+
+
 class CategoryLogo(models.Model):
     """Custom logo image uploaded per research category, editable from /admin/.
 

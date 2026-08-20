@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Products — IRCCP{% endblock %}
+{% block content %}
+<div class="page-content-narrow">
+  <div class="section-heading">
+    <h2 class="serif">Product & Solution Providers</h2>
+    <p>Commercial manufacturers and vendors of civil protection equipment and technology</p>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cat-filter-row">
+    <a href="{% url 'core:products' %}" class="cat-filter {% if not active_cat %}active-all{% endif %}">All Categories</a>
+    {% for value, label in categories %}
+      {% cat_config value "hex" as chex %}{% cat_config value "bg" as cbg %}
+      <a href="?cat={{ value|urlencode }}" class="cat-filter-cat"
+         style="{% if active_cat == value %}background:{{ chex }};color:#fff;border-color:{{ chex }};{% else %}background:{{ cbg }};color:{{ chex }};border-color:{{ chex }}44;{% endif %}">
+        {% cat_icon value 11 %} {{ label }}
+      </a>
+    {% endfor %}
+  </div>
+
+  {% if not companies %}
+    <div class="empty-state">
+      {% icon 'building' 40 %}
+      <p class="title">No companies listed yet.</p>
+    </div>
+  {% else %}
+    <div class="grid grid-2">
+      {% for c in companies %}
+        {% cat_config c.category "hex" as chex2 %}{% cat_config c.category "bg" as cbg2 %}
+        <div class="resource-card">
+          {% if c.display_logo %}
+            <div class="resource-logo-box"><img src="{{ c.display_logo }}" alt="{{ c.name }}" class="resource-logo-img"></div>
+          {% elif c.display_fallback %}
+            <img src="{{ c.display_fallback }}" alt="{{ c.name }}">
+          {% endif %}
+          <div class="resource-body">
+            <span class="chip chip-xs" style="background:{{ cbg2 }};color:{{ chex2 }};border-color:{{ chex2 }}44;">{% cat_icon c.category 10 %} {{ c.get_category_display }}</span>
+            <a href="{{ c.url }}" target="_blank" rel="noopener noreferrer" class="title">{{ c.name }} {% icon 'external' 11 %}</a>
+            <p>{{ c.desc }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,9 +1,11 @@
-"""Static reference data: external resources & scientific journals.
+"""One-time seed data for Resources & Journals.
 
-These lists mirror the constants from the original React app. They aren't
-user-editable content, so they live here as plain Python data rather than
-database models (unlike Researchers / Publications / News, which are real
-Django models backed by SQLite).
+IMPORTANT: this file is NOT used directly by the site anymore. Resources and
+Journals are now real database models (core.models.Resource / Journal),
+editable from /admin/. This file only exists as the source data for the
+one-time `python manage.py seed_resources_journals` import command — after
+that command has run once, editing this file has no effect on the live site.
+To change content going forward, use /admin/.
 """
 
 from .models import Category
@@ -38,23 +40,27 @@ RESOURCES = [
      "logo_url": WIKIMEDIA_COMMONS.format("International_Atomic_Energy_Agency_Logo.svg")},
     {"name": "UNDRR – UN Office for Disaster Risk Reduction", "url": "https://www.undrr.org",
      "desc": "UN body coordinating global disaster risk reduction and the Sendai Framework.",
-     "cat": Category.DISASTER_MEDICINE, "img": "photo-1527515637462-cff94aca3584"},
+     "cat": Category.DISASTER_MEDICINE, "img": "photo-1527515637462-cff94aca3584",
+     "logo_url": WIKIMEDIA_COMMONS.format("United_Nations_Office_for_Disaster_Risk_Reduction_Logo.svg")},
     {"name": "CTIF – International Association of Fire and Rescue Services", "url": "https://www.ctif.org",
      "desc": "Global network of fire brigades promoting international cooperation and standards.",
-     "cat": Category.FIRE_SAFETY, "img": "photo-1504711434969-e33886168f5c"},
+     "cat": Category.FIRE_SAFETY, "img": "photo-1504711434969-e33886168f5c",
+     "logo_url": WIKIMEDIA_COMMONS.format("CTIF_logo.jpg")},
     {"name": "WADEM – World Association for Disaster and Emergency Medicine", "url": "https://wadem.org",
      "desc": "International professional society advancing disaster and emergency medicine.",
      "cat": Category.DISASTER_MEDICINE, "img": "photo-1551601651-2a8555f1a136"},
     {"name": "NATO JCBRN Defence Centre of Excellence", "url": "https://www.jcbrn-coe.nato.int",
      "desc": "NATO's primary CBRN defence doctrine, training, and research body.",
-     "cat": Category.CBRN, "img": "photo-1554734867-bf3c00a49371"},
+     "cat": Category.CBRN, "img": "photo-1554734867-bf3c00a49371",
+     "logo_url": WIKIMEDIA_COMMONS.format("NATO_OTAN_landscape_logo.svg")},
     {"name": "UNEP – Environment & Emergency Response", "url": "https://www.unep.org",
      "desc": "Rapid environmental assessment and response in humanitarian emergencies.",
      "cat": Category.ENVIRONMENTAL_SAFETY, "img": "photo-1441974231531-c6227db76b6e",
      "logo_url": WIKIMEDIA_COMMONS.format("United_Nations_Environment_Programme_Logo.svg")},
     {"name": "CTBTO – Comprehensive Nuclear-Test-Ban Treaty Organization", "url": "https://www.ctbto.org",
      "desc": "International monitoring of nuclear tests and radiological incident detection.",
-     "cat": Category.CBRN, "img": "photo-1564564321837-a57b7070ac4f"},
+     "cat": Category.CBRN, "img": "photo-1564564321837-a57b7070ac4f",
+     "logo_url": WIKIMEDIA_COMMONS.format("Preparatory_Commission_for_the_Comprehensive_Nuclear-Test-Ban_Treaty_Organization_Logo.svg")},
     {"name": "ITOPF – International Tanker Owners Pollution Federation", "url": "https://www.itopf.org",
      "desc": "Technical support for marine oil spill response and environmental protection.",
      "cat": Category.ENVIRONMENTAL_SAFETY, "img": "photo-1473341304170-971dccb5ac1e"},
@@ -67,6 +73,11 @@ RESOURCES = [
 # JOURNALS entries whose "pub" isn't listed here just keep the category icon.
 PUBLISHER_LOGOS = {
     "Elsevier": WIKIMEDIA_COMMONS.format("Elsevier_wordmark.svg"),
+    "Springer": WIKIMEDIA_COMMONS.format("Springer_Nature_Logo.svg"),
+    "Taylor & Francis": WIKIMEDIA_COMMONS.format("Taylor_%26_Francis_Group_logo.svg"),
+    "American Chemical Society": WIKIMEDIA_COMMONS.format("American_Chemical_Society_logo.svg"),
+    "Cambridge University Press": WIKIMEDIA_COMMONS.format("Cambridge_University_Press_logo.svg"),
+    "Oxford University Press": WIKIMEDIA_COMMONS.format("OUP_logo.svg"),
 }
 
 JOURNALS = [

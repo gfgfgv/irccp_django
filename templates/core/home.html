@@ -177,15 +177,15 @@
     </div>
     <div class="grid grid-4">
       {% for r in resources_top %}
-        {% cat_config r.cat "hex" as rhex %}{% cat_config r.cat "bg" as rbg2 %}
+        {% cat_config r.category "hex" as rhex %}{% cat_config r.category "bg" as rbg2 %}
         <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
-          {% if r.logo_url %}
-            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ r.logo_url }}" alt="{{ r.name }}" class="resource-logo-img"></div>
-          {% else %}
-            <img src="https://images.unsplash.com/{{ r.img }}?w=400&h=200&fit=crop&auto=format" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          {% if r.display_logo %}
+            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ r.display_logo }}" alt="{{ r.name }}" class="resource-logo-img"></div>
+          {% elif r.display_fallback %}
+            <img src="{{ r.display_fallback }}" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
           {% endif %}
           <div class="body">
-            <span class="chip chip-xs" style="background:{{ rbg2 }};color:{{ rhex }};border-color:{{ rhex }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
+            <span class="chip chip-xs" style="background:{{ rbg2 }};color:{{ rhex }};border-color:{{ rhex }}44;">{% cat_icon r.category 10 %} {{ r.category }}</span>
             <h3>{{ r.name|truncatechars:60 }}</h3>
             <p>{{ r.desc|truncatechars:70 }}</p>
           </div>
@@ -195,15 +195,15 @@
     {% if resources_rest %}
     <div class="grid grid-2" style="margin-top:1.5rem;">
       {% for r in resources_rest %}
-        {% cat_config r.cat "hex" as rhex2 %}{% cat_config r.cat "bg" as rbg3 %}
+        {% cat_config r.category "hex" as rhex2 %}{% cat_config r.category "bg" as rbg3 %}
         <a href="{{ r.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
-          {% if r.logo_url %}
-            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ r.logo_url }}" alt="{{ r.name }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
-          {% else %}
-            <img src="https://images.unsplash.com/{{ r.img }}?w=160&h=128&fit=crop&auto=format" alt="{{ r.name }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
+          {% if r.display_logo %}
+            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ r.display_logo }}" alt="{{ r.name }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
+          {% elif r.display_fallback %}
+            <img src="{{ r.display_fallback }}" alt="{{ r.name }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
           {% endif %}
           <div style="flex:1;min-width:0;">
-            <span class="chip chip-xs" style="background:{{ rbg3 }};color:{{ rhex2 }};border-color:{{ rhex2 }}44;">{% cat_icon r.cat 10 %} {{ r.cat }}</span>
+            <span class="chip chip-xs" style="background:{{ rbg3 }};color:{{ rhex2 }};border-color:{{ rhex2 }}44;">{% cat_icon r.category 10 %} {{ r.category }}</span>
             <h3>{{ r.name|truncatechars:60 }}</h3>
             <p>{{ r.desc|truncatechars:70 }}</p>
           </div>
@@ -226,20 +226,20 @@
     </div>
     <div class="grid grid-4">
       {% for j in journals_top %}
-        {% cat_config j.cat "hex" as jhex %}{% cat_config j.cat "bg" as jbg %}
+        {% cat_config j.category "hex" as jhex %}{% cat_config j.category "bg" as jbg %}
         <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
-          {% if j.logo_url %}
-            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ j.logo_url }}" alt="{{ j.pub }}" class="resource-logo-img"></div>
+          {% if j.display_logo %}
+            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ j.display_logo }}" alt="{{ j.title }}" class="resource-logo-img"></div>
           {% else %}
-            <div class="card-color-block" style="background:{{ jbg }};color:{{ jhex }};">{% cat_icon j.cat 40 %}</div>
+            <div class="card-color-block" style="background:{{ jbg }};color:{{ jhex }};">{% cat_icon j.category 40 %}</div>
           {% endif %}
           <div class="body">
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
-              {% if j.if_ != "—" %}<span class="if-badge">IF {{ j.if_ }}</span>{% endif %}
+              <span class="chip chip-xs" style="background:{{ jbg }};color:{{ jhex }};border-color:{{ jhex }}44;">{% cat_icon j.category 10 %} {{ j.category }}</span>
+              {% if j.impact_factor != "—" %}<span class="if-badge">IF {{ j.impact_factor }}</span>{% endif %}
             </div>
             <h3>{{ j.title }}</h3>
-            <p>{{ j.pub }}</p>
+            <p>{{ j.publisher }}</p>
           </div>
         </a>
       {% endfor %}
@@ -247,17 +247,122 @@
     {% if journals_rest %}
     <div class="grid grid-2" style="margin-top:1.5rem;">
       {% for j in journals_rest %}
-        {% cat_config j.cat "hex" as jhex2 %}{% cat_config j.cat "bg" as jbg2 %}
+        {% cat_config j.category "hex" as jhex2 %}{% cat_config j.category "bg" as jbg2 %}
         <a href="{{ j.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
-          {% if j.logo_url %}
-            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ j.logo_url }}" alt="{{ j.pub }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
+          {% if j.display_logo %}
+            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ j.display_logo }}" alt="{{ j.title }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
           {% else %}
-            <div class="card-color-block-sm" style="background:{{ jbg2 }};color:{{ jhex2 }};">{% cat_icon j.cat 26 %}</div>
+            <div class="card-color-block-sm" style="background:{{ jbg2 }};color:{{ jhex2 }};">{% cat_icon j.category 26 %}</div>
           {% endif %}
           <div style="flex:1;min-width:0;">
-            <span class="chip chip-xs" style="background:{{ jbg2 }};color:{{ jhex2 }};border-color:{{ jhex2 }}44;">{% cat_icon j.cat 10 %} {{ j.cat }}</span>
+            <span class="chip chip-xs" style="background:{{ jbg2 }};color:{{ jhex2 }};border-color:{{ jhex2 }}44;">{% cat_icon j.category 10 %} {{ j.category }}</span>
             <h3>{{ j.title }}</h3>
-            <p>{{ j.pub }}</p>
+            <p>{{ j.publisher }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if events_top %}
+  <section>
+    <div class="section-header-row">
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Upcoming Events</h2>
+        <p>Conferences, exhibitions, and training events in civil protection</p>
+        <div class="rule"></div>
+      </div>
+      <a href="{% url 'core:events' %}" style="font-size:.875rem;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:.25rem;">View all {% icon 'arrow-right' 14 %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for e in events_top %}
+        {% cat_config e.category "hex" as ehex %}{% cat_config e.category "bg" as ebg %}
+        <a href="{% if e.registration_url %}{{ e.registration_url }}{% else %}{% url 'core:events' %}{% endif %}" {% if e.registration_url %}target="_blank" rel="noopener noreferrer"{% endif %} class="home-section-card">
+          {% if e.display_image %}
+            <img src="{{ e.display_image }}" alt="{{ e.title }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          {% else %}
+            <div class="card-color-block" style="background:{{ ebg }};color:{{ ehex }};">{% cat_icon e.category 40 %}</div>
+          {% endif %}
+          <div class="body">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="chip chip-xs" style="background:{{ ebg }};color:{{ ehex }};border-color:{{ ehex }}44;">{% cat_icon e.category 10 %} {{ e.category }}</span>
+              <span style="font-size:.625rem;color:var(--muted-foreground);">{{ e.date|date:"j M Y" }}</span>
+            </div>
+            <h3>{{ e.title|truncatechars:60 }}</h3>
+            <p>{% if e.location %}{{ e.location }}{% else %}{{ e.desc|truncatechars:60 }}{% endif %}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if events_rest %}
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for e in events_rest %}
+        {% cat_config e.category "hex" as ehex2 %}{% cat_config e.category "bg" as ebg2 %}
+        <a href="{% if e.registration_url %}{{ e.registration_url }}{% else %}{% url 'core:events' %}{% endif %}" {% if e.registration_url %}target="_blank" rel="noopener noreferrer"{% endif %} class="home-section-row">
+          {% if e.display_image %}
+            <img src="{{ e.display_image }}" alt="{{ e.title }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
+          {% else %}
+            <div class="card-color-block-sm" style="background:{{ ebg2 }};color:{{ ehex2 }};">{% cat_icon e.category 26 %}</div>
+          {% endif %}
+          <div style="flex:1;min-width:0;">
+            <span class="chip chip-xs" style="background:{{ ebg2 }};color:{{ ehex2 }};border-color:{{ ehex2 }}44;">{% cat_icon e.category 10 %} {{ e.category }}</span>
+            <h3>{{ e.title|truncatechars:60 }}</h3>
+            <p>{{ e.date|date:"j M Y" }}{% if e.location %} · {{ e.location }}{% endif %}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if companies_top %}
+  <section>
+    <div class="section-header-row">
+      <div class="section-heading" style="margin-bottom:0;">
+        <h2 class="serif">Product & Solution Providers</h2>
+        <p>Commercial manufacturers and vendors of civil protection equipment</p>
+        <div class="rule"></div>
+      </div>
+      <a href="{% url 'core:products' %}" style="font-size:.875rem;color:var(--accent);font-weight:500;display:flex;align-items:center;gap:.25rem;">View all {% icon 'arrow-right' 14 %}</a>
+    </div>
+    <div class="grid grid-4">
+      {% for c in companies_top %}
+        {% cat_config c.category "hex" as chex %}{% cat_config c.category "bg" as cbg %}
+        <a href="{{ c.url }}" target="_blank" rel="noopener noreferrer" class="home-section-card">
+          {% if c.display_logo %}
+            <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ c.display_logo }}" alt="{{ c.name }}" class="resource-logo-img"></div>
+          {% elif c.display_fallback %}
+            <img src="{{ c.display_fallback }}" alt="{{ c.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+          {% else %}
+            <div class="card-color-block" style="background:{{ cbg }};color:{{ chex }};">{% cat_icon c.category 40 %}</div>
+          {% endif %}
+          <div class="body">
+            <span class="chip chip-xs" style="background:{{ cbg }};color:{{ chex }};border-color:{{ chex }}44;">{% cat_icon c.category 10 %} {{ c.category }}</span>
+            <h3>{{ c.name|truncatechars:60 }}</h3>
+            <p>{{ c.desc|truncatechars:70 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if companies_rest %}
+    <div class="grid grid-2" style="margin-top:1.5rem;">
+      {% for c in companies_rest %}
+        {% cat_config c.category "hex" as chex2 %}{% cat_config c.category "bg" as cbg2 %}
+        <a href="{{ c.url }}" target="_blank" rel="noopener noreferrer" class="home-section-row">
+          {% if c.display_logo %}
+            <div class="resource-logo-box" style="width:5rem;height:4rem;border-radius:.6rem;"><img src="{{ c.display_logo }}" alt="{{ c.name }}" class="resource-logo-img" style="max-height:2.5rem;"></div>
+          {% elif c.display_fallback %}
+            <img src="{{ c.display_fallback }}" alt="{{ c.name }}" style="width:5rem;height:4rem;object-fit:cover;border-radius:.6rem;flex-shrink:0;">
+          {% else %}
+            <div class="card-color-block-sm" style="background:{{ cbg2 }};color:{{ chex2 }};">{% cat_icon c.category 26 %}</div>
+          {% endif %}
+          <div style="flex:1;min-width:0;">
+            <span class="chip chip-xs" style="background:{{ cbg2 }};color:{{ chex2 }};border-color:{{ chex2 }}44;">{% cat_icon c.category 10 %} {{ c.category }}</span>
+            <h3>{{ c.name|truncatechars:60 }}</h3>
+            <p>{{ c.desc|truncatechars:70 }}</p>
           </div>
         </a>
       {% endfor %}

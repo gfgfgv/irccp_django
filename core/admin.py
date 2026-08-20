@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import CategoryLogo, NewsItem, Publication, Researcher, SiteBranding
+from .models import CategoryLogo, Company, Event, Journal, NewsItem, Publication, Researcher, Resource, SiteBranding
 
 
 @admin.register(Researcher)
@@ -21,6 +21,39 @@ class NewsItemAdmin(admin.ModelAdmin):
     list_display = ("title", "category", "source", "date", "is_auto_imported")
     list_filter = ("category", "is_auto_imported", "source")
     search_fields = ("title", "summary", "source")
+
+
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "order")
+    list_filter = ("category",)
+    list_editable = ("order",)
+    search_fields = ("name", "desc")
+
+
+@admin.register(Journal)
+class JournalAdmin(admin.ModelAdmin):
+    list_display = ("title", "publisher", "category", "impact_factor", "order")
+    list_filter = ("category", "publisher")
+    list_editable = ("order",)
+    search_fields = ("title", "publisher", "desc")
+
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ("title", "date", "end_date", "location", "category", "order")
+    list_filter = ("category",)
+    list_editable = ("order",)
+    search_fields = ("title", "location", "desc")
+    date_hierarchy = "date"
+
+
+@admin.register(Company)
+class CompanyAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "order")
+    list_filter = ("category",)
+    list_editable = ("order",)
+    search_fields = ("name", "desc")
 
 
 @admin.register(CategoryLogo)
