@@ -41,8 +41,8 @@ class JournalAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ("title", "date", "end_date", "location", "category", "order")
-    list_filter = ("category",)
+    list_display = ("title", "date", "end_date", "location", "category", "order", "is_auto_imported")
+    list_filter = ("category", "is_auto_imported")
     list_editable = ("order",)
     search_fields = ("title", "location", "desc")
     date_hierarchy = "date"

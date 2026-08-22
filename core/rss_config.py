@@ -51,3 +51,48 @@ CATEGORY_KEYWORDS = {
     Category.CBRN: ["chemical weapon", "radiological", "biological weapon", "nuclear safety", "cbrn"],
     Category.FIRE_SAFETY: ["wildfire", "fire safety", "fire brigade", " fire ", "firefighter"],
 }
+
+
+# ---------------------------------------------------------------------------
+# Events auto-import (core/management/commands/fetch_events.py)
+# ---------------------------------------------------------------------------
+# Same idea as RSS_FEEDS above, but for the Events page. Each entry is one
+# real, publicly reachable feed of upcoming events.
+#
+# "type" can be:
+#   "rss"   — a normal RSS/Atom feed (parsed with feedparser, same as news).
+#             Most RSS feeds don't carry a structured event date/location,
+#             so fetch_events tries to pull a date out of the entry text; if
+#             it can't find one, that entry is skipped rather than guessed.
+#   "ical"  — an iCalendar (.ics) feed (parsed with the `icalendar` package).
+#             This is the more reliable option for events, since iCal
+#             entries have real DTSTART/LOCATION/SUMMARY fields — many event
+#             platforms (Localist, Plone-based sites, Google/Outlook
+#             calendar exports, etc.) publish one even when they don't
+#             publish RSS.
+#
+# As of Aug 2026, none of the ~20 Fire Safety / CBRN / EOD / Disaster
+# Medicine / Environmental Safety event sites checked (thebigredguide,
+# clocate, 10times, cbrneworld, ctif.org, sfpe.org, eodcoe.org, wadem.org,
+# unece.org, genevaenvironmentnetwork.org, etc.) had a confirmed, freely
+# accessible RSS or iCal feed for their event listings — aggregators like
+# 10times/clocate only expose event data through paid scraping APIs, and
+# the standalone organisation sites are plain HTML with no feed. So this
+# list ships empty. Add events for now through /admin/ → Core → Events.
+#
+# To wire up a real feed once you find one, just add an entry here, e.g.:
+# EVENT_FEEDS = [
+#     {
+#         "name": "CTIF Events",
+#         "url": "https://ctif.org/events/rss.xml",
+#         "type": "rss",
+#         "category": Category.FIRE_SAFETY,
+#     },
+#     {
+#         "name": "UNECE Meetings",
+#         "url": "https://unece.org/events/ical",
+#         "type": "ical",
+#         "category": Category.ENVIRONMENTAL_SAFETY,
+#     },
+# ]
+EVENT_FEEDS = []

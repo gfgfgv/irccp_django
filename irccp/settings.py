@@ -173,6 +173,13 @@ LOGOUT_REDIRECT_URL = 'core:home'
 RSS_AUTO_FETCH = True
 RSS_FETCH_INTERVAL_HOURS = 6
 
+# --- Events auto-import ----------------------------------------------------
+# Same mechanism as news above, but for the Events page (core/rss_config.py:
+# EVENT_FEEDS, core/management/commands/fetch_events.py). Runs once a day by
+# default since event listings change far less often than news. Uses the
+# same RSS_AUTO_FETCH switch to enable/disable.
+EVENT_FETCH_INTERVAL_HOURS = 24
+
 # --- Donate button ---------------------------------------------------------
 # Points the navbar "Donate" button at your real payment page once you have
 # one. Change via the DONATE_URL environment variable — no code edit needed.

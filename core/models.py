@@ -152,6 +152,13 @@ class Event(models.Model):
 
     order = models.PositiveIntegerField(default=0, help_text="Lower numbers appear first (ties broken by date).")
 
+    source_url = models.URLField(
+        "Original source URL", blank=True, unique=False,
+        help_text="Link to the original listing this event was imported from (used to avoid duplicate "
+                   "imports). Left blank for manually-added events.")
+    is_auto_imported = models.BooleanField(
+        default=False, help_text="True if this event was pulled in automatically by the fetch_events job.")
+
     class Meta:
         ordering = ["date", "order"]
 
