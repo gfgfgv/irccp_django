@@ -191,4 +191,4 @@ EVENT_FETCH_INTERVAL_HOURS = 24
 # one. Change via the DONATE_URL environment variable — no code edit needed.
 # See README "Кнопка доната" for quick options (Buy Me a Coffee, Ko-fi,
 # PayPal.me) that need no business verification and take ~5 minutes to set up.
-DONATE_URL = os.environ.get('DONATE_URL', 'https://www.buymeacoffee.com/irccp')
+DONATE_URL = os.environ.get('DONATE_URL', 'https://ko-fi.com/irccp')
