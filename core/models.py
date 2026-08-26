@@ -113,8 +113,9 @@ class NewsItem(models.Model):
     source = models.CharField(max_length=255)
     date = models.DateField()
     image = models.ImageField(upload_to="news/", blank=True, null=True)
-    image_url = models.URLField("External image URL (used if no image uploaded)", blank=True)
-    source_url = models.URLField("Original article URL", blank=True, unique=False,
+    # Явно добавляем max_length=1000 для внешних ссылок
+    image_url = models.URLField("External image URL (used if no image uploaded)", max_length=1000, blank=True)
+    source_url = models.URLField("Original article URL", max_length=1000, blank=True, unique=False,
                                   help_text="Used to avoid importing the same RSS item twice.")
     is_auto_imported = models.BooleanField(default=False, help_text="True if this item came from the RSS auto-fetch job.")
 
@@ -131,7 +132,6 @@ class NewsItem(models.Model):
         if self.image:
             return self.image.url
         return self.image_url
-
 
 class Event(models.Model):
     """A conference/exhibition/training event shown on the Events page —
