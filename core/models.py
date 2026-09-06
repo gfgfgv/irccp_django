@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 from django.urls import reverse
+from multiselectfield import MultiSelectField
 
 
 class Category(models.TextChoices):
@@ -89,7 +90,8 @@ class Researcher(models.Model):
 class Publication(models.Model):
     title = models.CharField(max_length=500)
     abstract = models.TextField()
-    category = models.CharField(max_length=32, choices=Category.choices)
+    # Использование MultiSelectField для выбора множества категорий
+    category = MultiSelectField(choices=Category.choices, max_length=255)
     author = models.ForeignKey(Researcher, on_delete=models.CASCADE, related_name="publications")
     doi = models.CharField("DOI or URL", max_length=500, blank=True)
     file = models.FileField("Publication file (PDF)", upload_to="publications/", blank=True, null=True)
@@ -113,7 +115,6 @@ class NewsItem(models.Model):
     source = models.CharField(max_length=255)
     date = models.DateField()
     image = models.ImageField(upload_to="news/", blank=True, null=True)
-    # Явно добавляем max_length=1000 для внешних ссылок
     image_url = models.URLField("External image URL (used if no image uploaded)", max_length=1000, blank=True)
     source_url = models.URLField("Original article URL", max_length=1000, blank=True, unique=False,
                                   help_text="Used to avoid importing the same RSS item twice.")
@@ -133,11 +134,8 @@ class NewsItem(models.Model):
             return self.image.url
         return self.image_url
 
-class Event(models.Model):
-    """A conference/exhibition/training event shown on the Events page —
-    a simple listing (title, date, location, description, external
-    registration link), admin-editable."""
 
+class Event(models.Model):
     title = models.CharField(max_length=255)
     date = models.DateField()
     end_date = models.DateField(blank=True, null=True, help_text="Leave blank for a single-day event.")
@@ -173,9 +171,6 @@ class Event(models.Model):
 
 
 class Company(models.Model):
-    """A commercial manufacturer/vendor shown on the Products page — company
-    card (logo, what they make, link to their site), admin-editable."""
-
     name = models.CharField(max_length=255)
     url = models.URLField("Website URL")
     desc = models.TextField("Description", help_text="What the company makes/does.")
@@ -211,9 +206,6 @@ class Company(models.Model):
 
 
 class Resource(models.Model):
-    """An external organization/link shown on the Resources page (admin-editable,
-    replaces the old core/data.py RESOURCES list)."""
-
     name = models.CharField(max_length=255)
     url = models.URLField("Website URL")
     desc = models.TextField("Description")
@@ -248,9 +240,6 @@ class Resource(models.Model):
 
 
 class Journal(models.Model):
-    """A scientific journal shown on the Journals page (admin-editable,
-    replaces the old core/data.py JOURNALS list)."""
-
     title = models.CharField(max_length=255)
     publisher = models.CharField(max_length=255)
     url = models.URLField("Website URL")
@@ -280,12 +269,6 @@ class Journal(models.Model):
 
 
 class CategoryLogo(models.Model):
-    """Custom logo image uploaded per research category, editable from /admin/.
-
-    Falls back to the built-in inline-SVG icon (see core_extras.cat_icon)
-    wherever no logo has been uploaded for a category yet.
-    """
-
     category = models.CharField(max_length=32, choices=Category.choices, unique=True)
     image = models.ImageField("Logo image", upload_to="category_logos/")
     updated_at = models.DateTimeField(auto_now=True)
@@ -300,12 +283,6 @@ class CategoryLogo(models.Model):
 
 
 class SiteBranding(models.Model):
-    """The main IRCCP shield logo shown in the navbar and hero section.
-
-    Singleton-style: saving a new one automatically replaces the previous
-    row, so there's always at most one active site logo.
-    """
-
     image = models.ImageField("Site logo", upload_to="branding/")
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -43,7 +43,7 @@
     <div class="grid grid-cats">
       {% for c in categories %}
         <a href="{% url 'core:publications' %}?cat={{ c.value|urlencode }}" class="cat-card" style="background:{{ c.bg }}; border-color:{{ c.hex }}30;">
-          <div class="cat-icon" style="background:{{ c.hex }}18; border-color:{{ c.hex }}30; color:{{ c.hex }};">{% cat_icon c.value 24 %}</div>
+          <div class="cat-icon" style="background:{{ c.hex }}18; border-color:{{ c.hex }}30; color:{{ c.hex }}";>{% cat_icon c.value 24 %}</div>
           <h3>{{ c.label }}</h3>
           <p>{{ c.desc }}</p>
           <div class="cat-footer" style="color:{{ c.hex }};">
@@ -67,12 +67,20 @@
     </div>
     <div class="grid grid-4">
       {% for pub in publications_top %}
-        {% cat_config pub.category "hex" as phex %}{% cat_config pub.category "bg" as pbg %}
-        <a href="{% url 'core:publications' %}?cat={{ pub.category|urlencode }}" class="home-section-card">
-          <div class="card-color-block" style="background:{{ pbg }};color:{{ phex }};">{% cat_icon pub.category 40 %}</div>
+        <a href="{% url 'core:publications' %}" class="home-section-card">
+          <div class="card-color-block" style="background:var(--secondary);color:var(--primary);">
+            {% icon 'book' 40 %}
+          </div>
           <div class="body">
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span class="chip chip-xs" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">{% cat_icon pub.category 10 %} {{ pub.category }}</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:.25rem;flex-wrap:wrap;">
+                {% for cat in pub.category %}
+                  {% cat_config cat "hex" as phex %}{% cat_config cat "bg" as pbg %}
+                  <span class="chip chip-xs" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">
+                    {% cat_icon cat 10 %} {{ cat }}
+                  </span>
+                {% endfor %}
+              </div>
               <span style="font-size:.625rem;color:var(--muted-foreground);">{{ pub.uploaded_at|date:"j M Y" }}</span>
             </div>
             <h3>{{ pub.title|truncatechars:70 }}</h3>
@@ -84,12 +92,18 @@
     {% if publications_rest %}
     <div class="grid grid-2" style="margin-top:1.5rem;">
       {% for pub in publications_rest %}
-        {% cat_config pub.category "hex" as phex2 %}{% cat_config pub.category "bg" as pbg2 %}
-        <a href="{% url 'core:publications' %}?cat={{ pub.category|urlencode }}" class="home-section-row">
-          <div class="card-color-block-sm" style="background:{{ pbg2 }};color:{{ phex2 }};">{% cat_icon pub.category 26 %}</div>
+        <a href="{% url 'core:publications' %}" class="home-section-row">
+          <div class="card-color-block-sm" style="background:var(--secondary);color:var(--primary);">
+            {% icon 'book' 26 %}
+          </div>
           <div style="flex:1;min-width:0;">
-            <div style="display:flex;align-items:center;gap:.5rem;">
-              <span class="chip chip-xs" style="background:{{ pbg2 }};color:{{ phex2 }};border-color:{{ phex2 }}44;">{% cat_icon pub.category 10 %} {{ pub.category }}</span>
+            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap;">
+              {% for cat in pub.category %}
+                {% cat_config cat "hex" as phex2 %}{% cat_config cat "bg" as pbg2 %}
+                <span class="chip chip-xs" style="background:{{ pbg2 }};color:{{ phex2 }};border-color:{{ phex2 }}44;">
+                  {% cat_icon cat 10 %} {{ cat }}
+                </span>
+              {% endfor %}
               <span style="font-size:.625rem;color:var(--muted-foreground);">{{ pub.uploaded_at|date:"j M Y" }}</span>
             </div>
             <h3>{{ pub.title|truncatechars:70 }}</h3>
@@ -218,7 +232,7 @@
           {% if j.display_logo %}
             <div class="resource-logo-box" style="width:100%;height:9rem;"><img src="{{ j.display_logo }}" alt="{{ j.title }}" class="resource-logo-img"></div>
           {% else %}
-            <div class="card-color-block" style="background:{{ jbg }};color:{{ jhex }};">{% cat_icon j.category 40 %}</div>
+            <div class="card-color-block" style="background:{{ jbg };color:{{ jhex }};">{% cat_icon j.category 40 %}</div>
           {% endif %}
           <div class="body">
             <div style="display:flex;align-items:center;justify-content:space-between;">

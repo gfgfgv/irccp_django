@@ -24,10 +24,20 @@
         <label for="id_title">Publication Title *</label>
         {{ form.title }}
       </div>
+
+      <!-- Обновленный блок выбора категорий через чекбоксы -->
       <div class="form-field">
-        <label for="id_category">Category *</label>
-        {{ form.category }}
+        <label>Categories (select one or more) *</label>
+        <div class="category-checkboxes-grid" style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem;">
+          {% for checkbox in form.category %}
+            <label class="category-checkbox-item" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.75rem; border: 1px solid var(--border); border-radius: .6rem; background: #fff; cursor: pointer;">
+              {{ checkbox.tag }}
+              <span style="font-size: 0.875rem; color: var(--foreground);">{{ checkbox.choice_label }}</span>
+            </label>
+          {% endfor %}
+        </div>
       </div>
+
       <div class="form-field">
         <label for="id_abstract">Abstract *</label>
         {{ form.abstract }}

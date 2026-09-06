@@ -86,15 +86,16 @@ class PublicationUploadForm(forms.ModelForm):
         model = Publication
         fields = ["title", "category", "abstract", "doi", "file"]
         widgets = {
-            "title": forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "Full title of the article or paper"}),
-            "category": forms.Select(attrs={"class": SELECT_CLS}),
-            "abstract": forms.Textarea(attrs={"class": TEXTAREA_CLS, "rows": 5, "placeholder": "Provide a concise summary of your research (objectives, methods, findings)..."}),
-            "doi": forms.TextInput(attrs={"class": TEXT_INPUT_CLS, "placeholder": "https://doi.org/10.xxxx/xxxxx"}),
+            'title': forms.TextInput(attrs={'class': TEXT_INPUT_CLS, 'placeholder': 'Title of the publication'}),
+            'category': forms.CheckboxSelectMultiple(),
+            'abstract': forms.Textarea(attrs={'class': TEXTAREA_CLS, 'rows': 4, 'placeholder': 'Brief summary or abstract...'}),
+            'doi': forms.TextInput(attrs={'class': TEXT_INPUT_CLS, 'placeholder': '10.xxxx/xxxxx or URL'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["category"].choices = [("", "Select a research category...")] + list(Category.choices)
+        # Убрали добавление пустого варианта ("Select a research category...")
+        self.fields["category"].choices = list(Category.choices)
         self.fields["category"].required = True
         self.fields["file"].required = False
         self.fields["doi"].required = False

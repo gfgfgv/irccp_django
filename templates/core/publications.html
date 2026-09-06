@@ -55,12 +55,19 @@
     <div class="grid grid-2">
       {% for pub in publications %}
         <div class="card">
-          <div class="card-row">
-            {% cat_config pub.category "hex" as phex %}{% cat_config pub.category "bg" as pbg %}
-            <span class="chip" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">{% cat_icon pub.category 12 %} {{ pub.category }}</span>
+          <div class="card-row" style="flex-wrap: wrap; gap: .5rem;">
+            <!-- Выводим все категории публикации -->
+            <div style="display:flex; align-items:center; gap:.25rem; flex-wrap:wrap;">
+              {% for cat in pub.category %}
+                {% cat_config cat "hex" as phex %}{% cat_config cat "bg" as pbg %}
+                <span class="chip" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">
+                  {% cat_icon cat 12 %} {{ cat }}
+                </span>
+              {% endfor %}
+            </div>
             <span class="muted-date">{% icon 'clock' 11 %} {{ pub.uploaded_at|date:"j M Y" }}</span>
           </div>
-          <h3 class="card-title">{{ pub.title }}</h3>
+          <h3 class="card-title" style="margin-top: .5rem;">{{ pub.title }}</h3>
           <p class="card-abstract">{{ pub.abstract|truncatewords:30 }}</p>
           <div class="card-foot">
             <div class="card-meta">{% icon 'user' 11 %} <strong style="color:var(--foreground);">{{ pub.author.name }}</strong>{% if pub.institution %} · {{ pub.institution }}{% endif %}</div>

@@ -390,3 +390,23 @@ img.social-icon {
   background: transparent !important;
   display: inline-block !important;
 }
+
+.nav-auth, .nav-user {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  margin-left: auto !important; /* Прижимает блок пользователя и Logout к правому краю */
+}
+
+.user-fullname {
+  white-space: nowrap !important; /* Запрещает перенос имени на новую строку */
+  overflow: visible !important;   /* Гарантирует показ полного имени */
+  max-width: none !important;     /* Убирает ограничение по ширине */
+}
+
+.logout-btn {
+  flex-shrink: 0 !important;      /* Не дает кнопке Logout сжиматься */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
