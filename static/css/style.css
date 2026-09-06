@@ -327,3 +327,53 @@ a { color: inherit; text-decoration: none; }
 
 .filters-bar { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.5rem; }
 @media (min-width: 640px) { .filters-bar { flex-direction: row; } }
+
+.director-header {
+  margin-top: 0 !important;             /* Убирает верхний отступ от шапки сайта */
+  margin-bottom: 1.5rem !important;     /* Оптимальный отступ снизу до разделителя */
+  padding: 1.25rem !important;          /* Уменьшенный внутренний отступ */
+}
+
+.director-header img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 140px !important;              /* Ровный аккуратный размер фото */
+  height: 140px !important;
+  object-fit: cover !important;         /* Заполнение без искажения пропорций */
+  object-position: top !important;      /* Смещение фокуса на лицо, чтобы не обрезалось */
+  border-radius: 50% !important;        /* Идеальный круг */
+  border: 3px solid var(--accent) !important; /* Стильная рамка в цвет темы */
+}
+
+.researcher-avatar,
+.photo-circle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important; /* Не дает картинке вылезти за пределы круглого блока */
+  background-color: var(--secondary);
+}
+
+.researcher-avatar img,
+.photo-circle img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important; /* Полное отображение картинки без срезания краев */
+}
+
+/* 2. Настройка прямоугольных карточек (News, Events, Resources) */
+.news-card img,
+.news-row img,
+.event-card-img,
+.resource-card img,
+.resource-logo-img {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important; /* Масштабирует картинку под размер контейнера */
+  background-color: #f8f9fa;      /* Заполняет пустые поля, если пропорции не совпадают */
+  display: block;
+  margin: 0 auto;
+}
