@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}IRCCP — International Research Center of Civil Protection{% endblock %}</title>
+  <title>{% block title %}IRCCP — International Research Centre of Civil Protection{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
   <div class="page-body">
     <nav class="navbar">
-      <div class="navbar-inner">
+      <div class="navbar-inner" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
         <a href="{% url 'core:home' %}" class="brand">
           {% site_logo as logo_url %}
           {% if logo_url %}
@@ -37,10 +37,10 @@
           <a href="{{ products_url }}" class="nav-link {% if request.path == products_url %}active{% endif %}">Products</a>
         </div>
 
-        <div class="nav-auth">
+        <div class="nav-auth" style="margin-left: auto; display: flex; align-items: center; gap: 0.75rem;">
           <a href="{{ DONATE_URL }}" target="_blank" rel="noopener noreferrer" class="btn-donate">{% icon 'heart' 14 %} Donate</a>
           {% if user.is_authenticated %}
-            <div class="nav-user">
+            <div class="nav-user" style="display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
               <span class="nav-avatar">
                 {% if user.researcher.photo %}
                   <img src="{{ user.researcher.photo.url }}" alt="{{ user.researcher.name }}">
@@ -48,11 +48,14 @@
                   {% icon 'user' 14 %}
                 {% endif %}
               </span>
-              <span>{{ user.researcher.name|split_first }}</span>
+              <span style="font-size: 0.875rem; font-weight: 500; color: #fff;">{{ user.researcher.name|default:user.username }}</span>
             </div>
-            <form method="post" action="{% url 'core:logout' %}" style="display:inline">
+
+            <form method="post" action="{% url 'core:logout' %}" style="display: inline-flex; align-items: center; margin-left: 0.25rem;">
               {% csrf_token %}
-              <button type="submit" class="icon-btn" title="Log out">{% icon 'logout' 16 %}</button>
+              <button type="submit" class="icon-btn" title="Log out" style="cursor: pointer; background: transparent; border: none; padding: 0.25rem; display: flex; align-items: center; justify-content: center;">
+                {% icon 'logout' 16 %}
+              </button>
             </form>
           {% else %}
             <a href="{% url 'core:login' %}" class="btn-ghost-white">Sign In</a>
@@ -91,7 +94,7 @@
         <div class="footer-grid">
           <div class="footer-brand">
             <h3 class="serif">IRCCP</h3>
-            <p>International Research Center of Civil Protection — advancing scientific research for a safer world across all civil protection disciplines.</p>
+            <p>International Research Centre of Civil Protection — advancing scientific research for a safer world across all civil protection disciplines.</p>
           </div>
           <div class="footer-col">
             <h4>Navigation</h4>
@@ -112,7 +115,7 @@
             </ul>
           </div>
         </div>
-        <div class="footer-bottom">&copy; {% now "Y" %} International Research Center of Civil Protection. All rights reserved.</div>
+        <div class="footer-bottom">&copy; {% now "Y" %} International Research Centre of Civil Protection. All rights reserved.</div>
       </div>
     </footer>
   </div>
