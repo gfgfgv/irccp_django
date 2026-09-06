@@ -1,9 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 {% load core_extras %}
+
 {% block title %}Researchers — IRCCP{% endblock %}
+
 {% block content %}
 <div class="page-content-narrow">
 
+  <!-- Заголовок страницы -->
   <div class="section-header-row">
     <div class="section-heading" style="margin-bottom:0;">
       <h2 class="serif">Scientific Community</h2>
@@ -12,11 +16,35 @@
     </div>
   </div>
 
+  <!-- Карточка директора (Максим Владимирович Кустов) -->
+  <div class="director-header text-center mb-5 p-4 bg-light rounded shadow-sm" style="margin-top: 1.5rem;">
+    <img src="{% static 'images/Director.jpg' %}" alt="Director IRCCP" class="rounded-circle mb-3" style="width: 160px; height: 160px; object-fit: cover; border: 3px solid #0d6efd;">
+    <h2 class="fw-bold mb-1">Kustov Maksym Vladimirovich</h2>
+    <p class="text-primary fw-semibold fs-5 mb-1">Founder and Director of IRCCP</p>
+    <p class="text-muted max-w-600 mx-auto mb-3">
+      Doctor of Science (Civil Safety), Professor
+    </p>
+
+    <div class="director-contacts d-flex justify-content-center align-items-center gap-2 flex-wrap">
+      <a href="mailto:m.kustov.irccr@gmail.com" class="btn btn-outline-primary btn-sm">Email</a>
+      <a href="https://www.linkedin.com/in/maksym-kustov-5182141a2?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="btn btn-outline-info btn-sm">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy1zJ3fRuYBTpGgC6TCgWnySRQ69HJasuCbKzoMrFILg&s=10" width="16" height="16" style="vertical-align: middle;"> LinkedIn
+      </a>
+      <a href="https://share.google/WpnmvJaRDhrGgK9UC" target="_blank" class="btn btn-outline-info btn-sm">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrRxKwXitUIsv5Og8juk8sAhUx9U5fZyHmeG9XF_Sqag&s=10" width="16" height="16" style="vertical-align: middle;"> ORCID
+      </a>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <!-- Форма поиска -->
   <form method="get" class="search-box" style="max-width:28rem;margin-bottom:2rem;">
     {% icon 'search' 16 %}
     <input type="text" name="q" value="{{ query }}" placeholder="Search researchers by name, institution...">
   </form>
 
+  <!-- Список остальных исследователей из БД -->
   {% if not researchers %}
     <div class="empty-state">
       {% icon 'users' 40 %}
@@ -50,7 +78,7 @@
               <div class="badge-icon" style="border-color:{{ bborder }};color:{{ btext }};background:{{ bbg }};">{% icon 'award' 14 %}BADGE</div>
               <div>
                 <p style="font-size:.75rem;font-weight:600;margin:0;color:{{ btext }};">{{ badge.label }}</p>
-                <p style="font-size:.625rem;color:var(--muted-foreground);margin:0;">{{ r.publication_count }} paper{{ r.publication_count|pluralize }} submitted · Photo TBA</p>
+                <p style="font-size:.625rem;color:var(--muted-foreground);margin:0;">{{ r.publication_count }} paper{{ r.publication_count|pluralize }} submitted</p>
               </div>
             </div>
           {% endif %}
