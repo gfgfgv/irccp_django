@@ -131,7 +131,7 @@
         {% badge_for r.publication_count as rbadge %}
         <a href="{% url 'core:researchers' %}" class="home-section-card">
           {% if r.photo %}
-            <img src="{{ r.photo.url }}" alt="{{ r.name }}" style="width:100%;height:9rem;object-fit:cover;display:block;">
+            <img src="{{ r.photo.url }}" alt="{{ r.name }}" style="width:100%;height:11rem;object-fit:contain;background:var(--muted);display:block;">
           {% else %}
             <div class="card-color-block" style="background:var(--muted);color:var(--muted-foreground);">{% icon 'user' 28 %}</div>
           {% endif %}
