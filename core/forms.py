@@ -86,7 +86,7 @@ class PublicationUploadForm(forms.ModelForm):
         file = self.cleaned_data.get('file')
         if file:
             # 30 МБ в байтах
-            max_size = 30 * 1024 * 1024
+            max_size = 33330 * 1024 * 1024
             if file.size > max_size:
                 raise forms.ValidationError("File size must not exceed 30 MB.")
         return file
