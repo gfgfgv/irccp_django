@@ -377,3 +377,16 @@ a { color: inherit; text-decoration: none; }
   display: block;
   margin: 0 auto;
 }
+
+/* Фиксированный размер для маленьких иконок в кнопках */
+img.social-icon {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  display: inline-block !important;
+}
