@@ -82,6 +82,14 @@ class RegisterForm(UserCreationForm):
 
 
 class PublicationUploadForm(forms.ModelForm):
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if file:
+            # 30 МБ в байтах
+            max_size = 30 * 1024 * 1024
+            if file.size > max_size:
+                raise forms.ValidationError("File size must not exceed 30 MB.")
+        return file
     class Meta:
         model = Publication
         fields = ["title", "category", "abstract", "doi", "file"]

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'multiselectfield',  # Добавлено для поддержки нескольких категорий
     'core',
 ]
 
@@ -91,10 +92,6 @@ WSGI_APPLICATION = 'irccp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-#
-# Defaults to the local SQLite file, exactly as before. If a DATABASE_URL
-# environment variable is set (e.g. when you attach a Render Postgres
-# database), that's used instead — no code changes needed either way.
 
 import dj_database_url
 
@@ -104,6 +101,7 @@ DATABASES = {
         conn_max_age=600,
     )
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -144,18 +142,9 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    # WhiteNoise serves static files directly from the app process — no
-    # separate nginx/CDN needed, works out of the box on Render's free tier.
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 
-# Media files (user uploads: avatars, publication files, news images, logos)
-#
-# IMPORTANT if you deploy to a host with an ephemeral filesystem (e.g.
-# Render's free tier): anything saved here is wiped on every redeploy/
-# restart/spin-down. For a quick free demo that's an acceptable trade-off;
-# for uploads that need to actually stick around, point this at an
-# S3-compatible bucket instead (see README "Деплой" section).
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -165,24 +154,16 @@ LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_REDIRECT_URL = 'core:home'
 
+# --- File Upload Limits (30 MB) -------------------------------------------
+DATA_UPLOAD_MAX_MEMORY_SIZE = 31457280  # 30 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880   # 5 MB (файлы больше будут писаться во временные файлы на диск)
+
 # --- RSS news auto-import -------------------------------------------------
-# See core/rss_config.py for the list of feeds and core/scheduler.py for how
-# the periodic job is started. Set RSS_AUTO_FETCH = False to disable the
-# background scheduler entirely (you can still run it manually with
-# `python manage.py fetch_news`).
 RSS_AUTO_FETCH = True
 RSS_FETCH_INTERVAL_HOURS = 6
 
 # --- Events auto-import ----------------------------------------------------
-# Same mechanism as news above, but for the Events page (core/rss_config.py:
-# EVENT_FEEDS, core/management/commands/fetch_events.py). Runs once a day by
-# default since event listings change far less often than news. Uses the
-# same RSS_AUTO_FETCH switch to enable/disable.
 EVENT_FETCH_INTERVAL_HOURS = 24
 
 # --- Donate button ---------------------------------------------------------
-# Points the navbar "Donate" button at your real payment page once you have
-# one. Change via the DONATE_URL environment variable — no code edit needed.
-# See README "Кнопка доната" for quick options (Buy Me a Coffee, Ko-fi,
-# PayPal.me) that need no business verification and take ~5 minutes to set up.
 DONATE_URL = os.environ.get('DONATE_URL', 'https://ko-fi.com/irccp')
