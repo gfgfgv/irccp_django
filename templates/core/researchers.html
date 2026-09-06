@@ -7,8 +7,6 @@
 {% block content %}
 <div class="page-content-narrow">
 
-
-
   <!-- Карточка директора (Максим Владимирович Кустов) -->
   <div class="director-header text-center mb-5 p-4 bg-light rounded shadow-sm" style="margin-top: 1.5rem;">
     <img src="{% static 'images/Director.jpg' %}" alt="Director IRCCP" class="rounded-circle mb-3" style="width: 160px; height: 160px; object-fit: cover; border: 3px solid #0d6efd;">
@@ -19,7 +17,7 @@
     </p>
 
     <div class="director-contacts d-flex justify-content-center align-items-center gap-2 flex-wrap">
-      <a href="mailto:m.kustov.irccr@gmail.com" class="btn btn-outline-primary btn-sm">
+      <a href="mailto:m.kustov.irccr@gmail.com" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1">
         {% icon 'mail' 14 %} m.kustov.irccr@gmail.com
       </a>
       <a href="https://www.linkedin.com/in/maksym-kustov-5182141a2?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="btn btn-outline-info btn-sm">
@@ -33,7 +31,7 @@
 
   <hr class="my-5">
 
-    <!-- Заголовок страницы -->
+  <!-- Заголовок страницы -->
   <div class="section-header-row">
     <div class="section-heading" style="margin-bottom:0;">
       <h2 class="serif">Scientific Community</h2>
@@ -43,7 +41,7 @@
   </div>
 
   <!-- Форма поиска -->
-  <form method="get" class="search-box" style="max-width:28rem;margin-bottom:2rem;">
+  <form method="get" class="search-box" style="max-width:28rem;margin-top:1.5rem;margin-bottom:2rem;">
     {% icon 'search' 16 %}
     <input type="text" name="q" value="{{ query }}" placeholder="Search researchers by name, institution...">
   </form>
