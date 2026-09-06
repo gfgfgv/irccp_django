@@ -133,7 +133,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Hero ---------- */
 .hero {
-  position: relative; min-height: 480px; display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+  position: relative; min-height: auto; display: flex; flex-direction: column; justify-content: center; overflow: hidden;
   background: linear-gradient(135deg, #071526 0%, #0D2340 55%, #0E3A6A 100%);
   background-image:
     linear-gradient(135deg, #071526 0%, #0D2340 55%, #0E3A6A 100%),
@@ -141,7 +141,7 @@ a { color: inherit; text-decoration: none; }
     linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
 }
-.hero-inner { position: relative; z-index: 1; max-width: 72rem; margin: 0 auto; padding: 4rem 1.5rem; width: 100%; }
+.hero-inner { position: relative; z-index: 1; max-width: 72rem; margin: 0 auto; padding: 2.5rem 1.5rem 2rem; width: 100%; }
 .hero-flex { display: flex; flex-direction: column; align-items: center; gap: 2.5rem; }
 .hero-logo {
   width: 11rem; height: 11rem; border-radius: 1.25rem; border: 2px solid rgba(255,255,255,.2);
@@ -175,7 +175,7 @@ a { color: inherit; text-decoration: none; }
 .news-banner { background: rgba(184,132,30,.1); border-top: 1px solid rgba(184,132,30,.2); border-bottom: 1px solid rgba(184,132,30,.2); padding: .5rem 1.5rem; }
 .news-banner-inner { max-width: 72rem; margin: 0 auto; display: flex; align-items: center; gap: .5rem; font-size: .75rem; color: var(--accent); font-weight: 500; }
 
-.page-content { max-width: 72rem; margin: 0 auto; padding: 3.5rem 1.5rem; display: flex; flex-direction: column; gap: 4rem; }
+.page-content { max-width: 72rem; margin: 0 auto; padding: 1.5rem 1.5rem 3.5rem; display: flex; flex-direction: column; gap: 4rem; }
 .page-content-narrow { max-width: 72rem; margin: 0 auto; padding: 3rem 1.5rem; }
 
 /* ---------- Grids ---------- */
