@@ -7,14 +7,7 @@
 {% block content %}
 <div class="page-content-narrow">
 
-  <!-- Заголовок страницы -->
-  <div class="section-header-row">
-    <div class="section-heading" style="margin-bottom:0;">
-      <h2 class="serif">Scientific Community</h2>
-      <p>{{ total_count }} registered researcher{{ total_count|pluralize }} in the IRCCP network</p>
-      <div class="rule"></div>
-    </div>
-  </div>
+
 
   <!-- Карточка директора (Максим Владимирович Кустов) -->
   <div class="director-header text-center mb-5 p-4 bg-light rounded shadow-sm" style="margin-top: 1.5rem;">
@@ -39,6 +32,15 @@
   </div>
 
   <hr class="my-5">
+
+    <!-- Заголовок страницы -->
+  <div class="section-header-row">
+    <div class="section-heading" style="margin-bottom:0;">
+      <h2 class="serif">Scientific Community</h2>
+      <p>{{ total_count }} registered researcher{{ total_count|pluralize }} in the IRCCP network</p>
+      <div class="rule"></div>
+    </div>
+  </div>
 
   <!-- Форма поиска -->
   <form method="get" class="search-box" style="max-width:28rem;margin-bottom:2rem;">
