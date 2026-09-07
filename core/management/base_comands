@@ -1,3 +1,4 @@
+ssh root@2.28.4.185
 cd /var/www/irccp_django
 source venv/bin/activate
 
