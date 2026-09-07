@@ -208,7 +208,12 @@ def register(request):
 
 @login_required(login_url="core:login")
 def upload_publication(request):
-    researcher = get_object_or_404(Researcher, user=request.user)
+    # Безопасное получение профиля исследователя
+    researcher = getattr(request.user, 'researcher', None)
+    if not researcher:
+        messages.error(request, "Your account does not have a Researcher profile associated with it.")
+        return redirect("core:home")
+
     if request.method == "POST":
         form = PublicationUploadForm(request.POST, request.FILES)
         if form.is_valid():
