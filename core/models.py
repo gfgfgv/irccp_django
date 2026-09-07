@@ -91,7 +91,7 @@ class Publication(models.Model):
     title = models.CharField(max_length=500)
     abstract = models.TextField()
     # Использование MultiSelectField для выбора множества категорий
-    category = MultiSelectField(choices=Category.choices, max_length=255)
+    category = MultiSelectField(choices=Category.choices, max_length=512)
     author = models.ForeignKey(Researcher, on_delete=models.CASCADE, related_name="publications")
     doi = models.CharField("DOI or URL", max_length=500, blank=True)
     file = models.FileField("Publication file (PDF)", upload_to="publications/", blank=True, null=True)
