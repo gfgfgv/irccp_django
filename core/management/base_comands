@@ -1,0 +1,28 @@
+cd /var/www/irccp_django
+source venv/bin/activate
+
+
+
+
+git pull
+python manage.py collectstatic --noinput
+systemctl restart gunicorn nginx
+
+python manage.py migrate --noinput
+
+
+
+
+
+git add .
+git commit -m "Update project logic and styles"
+git push origin master
+
+
+
+Если на сервере случайно изменятся файлы и Git откажется делать pull из ветки master:
+
+cd /var/www/irccp_django && \
+git checkout . && \
+git clean -fd && \
+git pull origin master
