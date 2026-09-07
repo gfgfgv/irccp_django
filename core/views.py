@@ -208,12 +208,10 @@ def register(request):
 
 @login_required(login_url="core:login")
 def upload_publication(request):
-    # Если у пользователя нет Researcher, создаем его автоматически
     researcher, created = Researcher.objects.get_or_create(
         user=request.user,
         defaults={
-            "degree": "Researcher",
-            "workplace": "Independent Researcher"
+            "workplace": "Independent Researcher",
         }
     )
 
