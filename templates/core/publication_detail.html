@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load core_extras %}
+
+{% block title %}{{ publication.title }} — IRCCP{% endblock %}
+
+{% block content %}
+<div class="page-content-narrow">
+
+  <!-- Кнопка возврата -->
+  <div style="margin-bottom: 1.5rem;">
+    <a href="{% url 'core:publications' %}" class="text-muted" style="text-decoration:none; display:inline-flex; align-items:center; gap:.25rem; font-size:.875rem;">
+      &larr; Back to Publications
+    </a>
+  </div>
+
+  <!-- Карточка статьи -->
+  <div class="card mb-4" style="padding: 1.5rem;">
+    <div class="card-row" style="flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem;">
+      <div style="display:flex; align-items:center; gap:.25rem; flex-wrap:wrap;">
+        {% for cat in publication.category %}
+          {% cat_config cat "hex" as phex %}{% cat_config cat "bg" as pbg %}
+          <span class="chip" style="background:{{ pbg }};color:{{ phex }};border-color:{{ phex }}44;">
+            {% cat_icon cat 12 %} {{ cat }}
+          </span>
+        {% endfor %}
+      </div>
+      <span class="muted-date">{% icon 'clock' 11 %} {{ publication.uploaded_at|date:"j M Y" }}</span>
+    </div>
+
+    <h1 class="serif" style="font-size: 1.75rem; margin-bottom: 1rem;">{{ publication.title }}</h1>
+    
+    <div style="font-size: .875rem; margin-bottom: 1.5rem; color: var(--foreground);">
+      {% icon 'user' 12 %} <strong>{{ publication.author.name }}</strong>
+      {% if publication.institution %} · {{ publication.institution }}{% endif %}
+    </div>
+
+    <div style="line-height: 1.6; margin-bottom: 1.5rem; font-size: 1rem;">
+      <h4 style="font-size: .875rem; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem;">Abstract</h4>
+      <p>{{ publication.abstract|linebreaks }}</p>
+    </div>
+
+    <div class="card-foot" style="border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1rem;">
+      {% if publication.doi %}
+        <a href="{{ publication.doi }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="font-size:.875rem;">
+          {% icon 'external' 14 %} View DOI / Reference
+        </a>
+      {% endif %}
+      {% if publication.file %}
+        <a href="{{ publication.file.url }}" target="_blank" rel="noopener noreferrer" class="btn btn-accent" style="font-size:.875rem;">
+          {% icon 'download' 14 %} Download Full PDF
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Блок комментариев -->
+  <div class="comments-section" style="margin-top: 2rem;">
+    <h3 class="serif" style="margin-bottom: 1rem;">
+      Discussion ({{ publication.comments.count }})
+    </h3>
+
+    <!-- Сообщения об успешном добавлении / удалении -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="margin-bottom: 1rem; padding: .75rem 1rem; border-radius: 4px; background: #f0fff4; border: 1px solid #1b6b35; color: #1b6b35;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Форма отправки комментария -->
+    {% if user.is_authenticated %}
+      <div class="card mb-4" style="padding: 1.25rem; background: var(--bg-alt, #f9f9f9);">
+        <form action="{% url 'core:add_comment' publication.id %}" method="post" id="comment-form">
+          {% csrf_token %}
+          <input type="hidden" name="parent_id" id="id_parent_id" value="">
+
+          <div id="reply-indicator" style="display:none; margin-bottom: .5rem; font-size: .875rem; color: var(--accent);">
+            Replying to <strong id="reply-username"></strong> 
+            <button type="button" onclick="cancelReply()" style="background:none; border:none; color:red; cursor:pointer; margin-left:.5rem;">Cancel</button>
+          </div>
+
+          {% if comment_form.text.errors %}
+            <div style="color: #c73b0f; background: #fff4f0; padding: .75rem; border-radius: 4px; margin-bottom: .75rem; border: 1px solid #c73b0f44;">
+              {% for error in comment_form.text.errors %}
+                <p style="margin:0;">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div style="margin-bottom: .75rem;">
+            {{ comment_form.text }}
+          </div>
+
+          <button type="submit" class="btn btn-accent" style="font-size: .875rem;">
+            Submit Comment
+          </button>
+        </form>
+      </div>
+    {% else %}
+      <div class="card mb-4" style="padding: 1rem; text-align: center;">
+        <p style="margin:0;">Please <a href="{% url 'core:login' %}?next={{ request.path }}">log in</a> to participate in the discussion.</p>
+      </div>
+    {% endif %}
+
+    <!-- Древовидный список комментариев -->
+    <div class="comments-tree">
+      {% for comment in comments %}
+        <div class="comment-item card mb-3" style="padding: 1rem;" id="comment-{{ comment.id }}">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: .5rem;">
+            <div>
+              <strong>{{ comment.author.researcher.name|default:comment.author.username }}</strong>
+              <span class="muted-date" style="margin-left: .5rem;">{{ comment.created_at|date:"j M Y, H:i" }}</span>
+            </div>
+            {% if comment.author == user or user.is_staff %}
+              <a href="{% url 'core:delete_comment' comment.id %}" onclick="return confirm('Delete this comment?');" style="color:#c73b0f; font-size:.75rem; text-decoration:none;">Delete</a>
+            {% endif %}
+          </div>
+
+          <p style="margin-bottom: .5rem; line-height: 1.5;">{{ comment.text|linebreaksbr }}</p>
+
+          {% if user.is_authenticated %}
+            <button type="button" onclick="setReply('{{ comment.id }}', '{{ comment.author.username }}')" style="background:none; border:none; color:var(--accent); font-size:.75rem; cursor:pointer; padding:0;">
+              Reply
+            </button>
+          {% endif %}
+
+          <!-- Вложенные ответы (Replies) -->
+          {% if comment.replies.all %}
+            <div class="replies-list" style="margin-top: .75rem; padding-left: 1.25rem; border-left: 2px solid var(--border, #e0e0e0);">
+              {% for reply in comment.replies.all %}
+                <div class="reply-item style="margin-top: .75rem;" id="comment-{{ reply.id }}">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: .25rem;">
+                    <div>
+                      <strong>{{ reply.author.researcher.name|default:reply.author.username }}</strong>
+                      <span class="muted-date" style="margin-left: .5rem;">{{ reply.created_at|date:"j M Y, H:i" }}</span>
+                    </div>
+                    {% if reply.author == user or user.is_staff %}
+                      <a href="{% url 'core:delete_comment' reply.id %}" onclick="return confirm('Delete this reply?');" style="color:#c73b0f; font-size:.75rem; text-decoration:none;">Delete</a>
+                    {% endif %}
+                  </div>
+                  <p style="margin:0; line-height: 1.4;">{{ reply.text|linebreaksbr }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="text-muted" style="text-align:center; margin-top:2rem;">No comments yet. Be the first to join the conversation!</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function setReply(commentId, username) {
+    document.getElementById('id_parent_id').value = commentId;
+    document.getElementById('reply-username').innerText = username;
+    document.getElementById('reply-indicator').style.display = 'block';
+    document.getElementById('comment-form').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function cancelReply() {
+    document.getElementById('id_parent_id').value = '';
+    document.getElementById('reply-indicator').style.display = 'none';
+  }
+</script>
+{% endblock %}

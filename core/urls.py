@@ -16,4 +16,7 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("login/", views.EmailLoginView.as_view(), name="login"),
     path("logout/", views.logout_view, name="logout"),
+    path("publication/<int:pk>/", views.publication_detail, name="publication_detail"),
+    path("publication/<int:pub_id>/comment/", views.add_comment, name="add_comment"),
+    path("comment/<int:comment_id>/delete/", views.delete_comment, name="delete_comment"),
 ]

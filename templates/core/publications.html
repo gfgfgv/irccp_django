@@ -67,15 +67,33 @@
             </div>
             <span class="muted-date">{% icon 'clock' 11 %} {{ pub.uploaded_at|date:"j M Y" }}</span>
           </div>
-          <h3 class="card-title" style="margin-top: .5rem;">{{ pub.title }}</h3>
+
+          <!-- Ссылка на детальную страницу публикации в заголовке -->
+          <h3 class="card-title" style="margin-top: .5rem;">
+            <a href="{% url 'core:publication_detail' pub.id %}" style="text-decoration:none; color:inherit;">
+              {{ pub.title }}
+            </a>
+          </h3>
+
           <p class="card-abstract">{{ pub.abstract|truncatewords:30 }}</p>
+
           <div class="card-foot">
-            <div class="card-meta">{% icon 'user' 11 %} <strong style="color:var(--foreground);">{{ pub.author.name }}</strong>{% if pub.institution %} · {{ pub.institution }}{% endif %}</div>
-            {% if pub.doi %}
-              <a href="{{ pub.doi }}" target="_blank" rel="noopener noreferrer" style="font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.25rem;">{% icon 'external' 11 %} DOI</a>
-            {% elif pub.file %}
-              <a href="{{ pub.file.url }}" target="_blank" rel="noopener noreferrer" style="font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.25rem;">{% icon 'external' 11 %} File</a>
-            {% endif %}
+            <div class="card-meta">
+              {% icon 'user' 11 %} <strong style="color:var(--foreground);">{{ pub.author.name }}</strong>{% if pub.institution %} · {{ pub.institution }}{% endif %}
+            </div>
+
+            <div style="display:flex; align-items:center; gap:.75rem;">
+              <!-- Ссылка на обсуждение и комментарии -->
+              <a href="{% url 'core:publication_detail' pub.id %}" style="font-size:.75rem; color:var(--accent); display:flex; align-items:center; gap:.25rem; text-decoration:none;">
+                {% icon 'message-square' 11 %} Comments ({{ pub.comments.count }})
+              </a>
+
+              {% if pub.doi %}
+                <a href="{{ pub.doi }}" target="_blank" rel="noopener noreferrer" style="font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.25rem;">{% icon 'external' 11 %} DOI</a>
+              {% elif pub.file %}
+                <a href="{{ pub.file.url }}" target="_blank" rel="noopener noreferrer" style="font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.25rem;">{% icon 'external' 11 %} File</a>
+              {% endif %}
+            </div>
           </div>
         </div>
       {% endfor %}

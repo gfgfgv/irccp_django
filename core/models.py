@@ -306,3 +306,16 @@ def _clear_category_logo_cache(sender, instance, **kwargs):
 @receiver([post_save, post_delete], sender=SiteBranding)
 def _clear_site_logo_cache(sender, **kwargs):
     cache.delete("site_logo_url")
+
+class Comment(models.Model):
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name="comments")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
+    text = models.TextField("Comment")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.publication}"

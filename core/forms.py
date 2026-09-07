@@ -107,3 +107,61 @@ class PublicationUploadForm(forms.ModelForm):
         self.fields["category"].required = True
         self.fields["file"].required = False
         self.fields["doi"].required = False
+
+
+from django import forms
+from core.models import Comment
+
+PROHIBITED_WORDS = [
+    # Спам и реклама
+    "casino", "k4sino", "kasino", "c4sino", "vulcan", "vulkan", "slot", "betting",
+    "poker", "jackpot", "1xbet", "pinup", "vavada", "melbet", "parimatch",
+    "free money", "fast cash", "earn online", "crypto giveaway", "airdrop",
+    "telegram", "t.me/", "t.me", "whatsapp", "viber", "bit.ly", "tinyurl",
+    "viagra", "cialis", "payday loan", "work from home",
+
+    # Английский мат и оскорбления
+    "fuck", "fuk", "f*ck", "fxck", "fck", "fucker", "fucking", "shit", "sh*t",
+    "sh1t", "bullshit", "asshole", "bitch", "b!tch", "b1tch", "bastard", "cunt",
+    "dick", "pussy", "nigger", "retard", "faggot", "whore",
+
+    # Укр / Рус мат и транслит
+    "блят", "бляд", "blyat", "bliat", "сука", "сучк", "suka", "syka",
+    "хуй", "хуя", "хуе", "хуи", "хуйло", "hui", "huy", "khuy", "xuy", "xui",
+    "пизд", "пидо", "пида", "pizd", "pido", "pidor", "пидор", "пидарас",
+    "ебат", "ебан", "ебал", "ёб", "yeb", "ebat", "eban", "мудак", "мудил",
+    "гандон", "gandon", "презерватив", "лох", "долбоеб", "долбоёб", "уебок",
+    "уёбок", "залуп", "чмо", "шлюх", "курва", "kurwa"
+]
+
+
+class CommentForm(forms.ModelForm):
+    parent_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = Comment
+        fields = ["text"]
+        widgets = {
+            "text": forms.Textarea(attrs={
+                "rows": 3,
+                "class": "form-control",
+                "placeholder": "Write a comment..."
+            }),
+        }
+
+    def clean_text(self):
+        text = self.cleaned_data.get("text", "")
+        lowered = text.lower()
+
+        # Нормализация спецсимволов
+        replacements = {'@': 'a', '4': 'a', '1': 'i', '!': 'i', '0': 'o', '3': 'e', '$': 's', '5': 's', '*': ''}
+        normalized_text = lowered
+        for char, replacement in replacements.items():
+            normalized_text = normalized_text.replace(char, replacement)
+
+        for word in PROHIBITED_WORDS:
+            if word in lowered or word in normalized_text:
+                raise forms.ValidationError(
+                    f"Ваш комментарий содержит запрещенное слово: «{word}». Пожалуйста, удалите его.")
+
+        return text

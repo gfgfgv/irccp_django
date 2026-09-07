@@ -5,12 +5,26 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
+from core.forms import CommentForm
+from core.models import Comment, Publication
+
 from .forms import EmailLoginForm, PublicationUploadForm, RegisterForm
-from .models import CATEGORY_CONFIG, Category, Company, Event, Journal, NewsItem, Publication, Researcher, Resource
+from .models import (
+    CATEGORY_CONFIG,
+    Category,
+    Company,
+    Event,
+    Journal,
+    NewsItem,
+    Publication,
+    Researcher,
+    Resource,
+)
 
 
 def _top_and_rest(items, top_count=4, rest_count=4):
@@ -22,9 +36,6 @@ def home(request):
     publications_list = list(Publication.objects.select_related("author__user")[:8])
     researchers_list = list(Researcher.objects.select_related("user").prefetch_related("publications")[:8])
     news_list = list(NewsItem.objects.all()[:8])
-    # Events: show upcoming ones first (soonest first); if there aren't 8
-    # upcoming, fill the rest with the most recent past events so the
-    # section isn't awkwardly empty right after a real event happens.
     from django.utils.timezone import localdate
     today = localdate()
     upcoming_events = list(Event.objects.filter(date__gte=today).order_by("date"))
@@ -34,8 +45,6 @@ def home(request):
     else:
         events_list = upcoming_events[:8]
 
-    # Resources/Journals/Companies don't have a "recent" concept, so we just
-    # show a random sample each time rather than pretending to rank them.
     all_resources = list(Resource.objects.all())
     all_journals = list(Journal.objects.all())
     all_companies = list(Company.objects.all())
@@ -117,6 +126,83 @@ def publications(request):
         "total_count": Publication.objects.count(),
     }
     return render(request, "core/publications.html", context)
+
+
+# ==================== НОВЫЕ ФУНКЦИИ ДЛЯ КОММЕНТАРИЕВ ====================
+
+def publication_detail(request, pk):
+    """Детальная страница публикации с выводом комментариев и формы."""
+    publication = get_object_or_404(Publication, pk=pk)
+    # Загружаем только верхнеуровневые комментарии (без родителя)
+    comments = publication.comments.filter(parent__isnull=True).select_related("author")
+    comment_form = CommentForm()
+
+    return render(request, "core/publication_detail.html", {
+        "publication": publication,
+        "comments": comments,
+        "comment_form": comment_form,
+    })
+
+
+@login_required(login_url="core:login")
+def add_comment(request, pub_id):
+    """Добавление нового комментария или ответа с валидацией бан-слов."""
+    publication = get_object_or_404(Publication, pk=pub_id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.publication = publication
+            comment.author = request.user
+
+            # Если передано parent_id — привязываем как ответ на другой комментарий
+            parent_id = form.cleaned_data.get("parent_id")
+            if parent_id:
+                comment.parent = get_object_or_404(Comment, pk=parent_id)
+
+            comment.save()
+
+            # Отправка email автору статьи (если комментатор — не сам автор)
+            author_email = publication.author.user.email
+            if author_email and publication.author.user != request.user:
+                send_mail(
+                    subject=f"New comment on '{publication.title}'",
+                    message=f"User {request.user.username} left a comment: {comment.text}",
+                    from_email=None,
+                    recipient_list=[author_email],
+                    fail_silently=True,
+                )
+
+            messages.success(request, "Comment added successfully.")
+            return redirect("core:publication_detail", pk=pub_id)
+        else:
+            # Если есть ошибка (бан-слово), не редиректим, а отдаем ту же страницу с ошибкой формы
+            comments = publication.comments.filter(parent__isnull=True).select_related("author")
+            return render(request, "core/publication_detail.html", {
+                "publication": publication,
+                "comments": comments,
+                "comment_form": form,
+            })
+
+    return redirect("core:publication_detail", pk=pub_id)
+
+
+@login_required(login_url="core:login")
+def delete_comment(request, comment_id):
+    """Удаление комментария автором или администратором."""
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if comment.author == request.user or request.user.is_staff:
+        pub_id = comment.publication.id
+        comment.delete()
+        messages.success(request, "Comment deleted.")
+        return redirect("core:publication_detail", pk=pub_id)
+
+    messages.error(request, "Permission denied.")
+    return redirect("core:home")
+
+
+# =========================================================================
 
 
 def researchers(request):
