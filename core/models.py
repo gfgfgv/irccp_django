@@ -13,6 +13,7 @@ class Category(models.TextChoices):
     EOD = "EOD", "EOD"
     DISASTER_MEDICINE = "Disaster Medicine", "Disaster Medicine"
     ENVIRONMENTAL_SAFETY = "Environmental Safety", "Environmental Safety"
+    CRISIS_PSYCHOLOGY = "Crisis Psychology", "Crisis Psychology"
 
 
 CATEGORY_CONFIG = {
@@ -35,6 +36,12 @@ CATEGORY_CONFIG = {
     Category.ENVIRONMENTAL_SAFETY: {
         "hex": "#0E7490", "bg": "#F0FFFE", "icon": "leaf",
         "desc": "Industrial spill response, environmental hazard assessment, monitoring, and ecological protection.",
+    },
+    Category.CRISIS_PSYCHOLOGY: {
+        "hex": "#8B5CF6",
+        "bg": "#F5F3FF",
+        "icon": "heart",
+        "desc": "Psychological support, trauma recovery, stress management during emergencies."
     },
 }
 
