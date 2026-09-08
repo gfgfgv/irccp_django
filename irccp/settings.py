@@ -166,4 +166,4 @@ RSS_FETCH_INTERVAL_HOURS = 6
 EVENT_FETCH_INTERVAL_HOURS = 24
 
 # --- Donate button ---------------------------------------------------------
-DONATE_URL = os.environ.get('DONATE_URL', 'https://ko-fi.com/irccp')
+DONATE_URL = os.environ.get('DONATE_URL', 'https://donatello.to/IRCCP')
