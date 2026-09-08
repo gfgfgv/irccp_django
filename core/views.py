@@ -97,7 +97,9 @@ def category_cards():
             "bg": cfg["bg"],
             "icon": cfg["icon"],
             "desc": cfg["desc"],
-            "count": Publication.objects.filter(category=value).count(),
+            # Было: count = Publication.objects.filter(category=value).count()
+            # Стало: используем icontains для поиска подстроки внутри MultiSelectField
+            "count": Publication.objects.filter(category__icontains=value).count(),
         })
     return cards
 
