@@ -41,6 +41,7 @@ CATEGORY_CONFIG = {
         "hex": "#8B5CF6",
         "bg": "#F5F3FF",
         "icon": "heart",
+        "image": "category_logos/crisis_psychology.jpg",
         "desc": "Psychological support, trauma recovery, stress management during emergencies."
     },
 }
