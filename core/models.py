@@ -326,3 +326,40 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author} on {self.publication}"
+
+
+
+class Partner(models.Model):
+    name = models.CharField("Имя партнера", max_length=255)
+    order = models.PositiveIntegerField("Порядок", default=0)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = "Партнер"
+        verbose_name_plural = "Партнеры"
+
+    def __str__(self):
+        return self.name
+
+
+class PartnerLink(models.Model):
+    ICON_CHOICES = [
+        ('globe', 'Website'),
+        ('instagram', 'Instagram'),
+        ('send', 'Telegram'),
+        ('share-2', 'Facebook/Social'),
+        ('linkedin', 'LinkedIn'),
+        ('mail', 'Email'),
+    ]
+
+    partner = models.ForeignKey(Partner, related_name='links', on_delete=models.CASCADE)
+    title = models.CharField("Название / Подсказка", max_length=100, help_text="Например: Instagram, Сайт, Telegram")
+    url = models.URLField("Ссылка")
+    icon = models.CharField("Иконка", max_length=50, choices=ICON_CHOICES, default='globe')
+
+    class Meta:
+        verbose_name = "Ссылка партнера"
+        verbose_name_plural = "Ссылки партнеров"
+
+    def __str__(self):
+        return f"{self.partner.name} - {self.title}"

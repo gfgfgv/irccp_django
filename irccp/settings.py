@@ -82,6 +82,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.category_choices',
                 'core.context_processors.donate_url',
+                'core.context_processors.partners',
             ],
         },
     },

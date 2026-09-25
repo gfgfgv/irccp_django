@@ -1,7 +1,17 @@
 from django.contrib import admin
 
-from .models import CategoryLogo, Company, Event, Journal, NewsItem, Publication, Researcher, Resource, SiteBranding
+from .models import CategoryLogo, Company, Event, Journal, NewsItem, Publication, Researcher, Resource, SiteBranding, Partner, PartnerLink
 
+
+class PartnerLinkInline(admin.TabularInline):
+    model = PartnerLink
+    extra = 1  # Количество пустых строк для новых ссылок по умолчанию
+
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'order')
+    list_editable = ('order',)
+    inlines = [PartnerLinkInline]
 
 @admin.register(Researcher)
 class ResearcherAdmin(admin.ModelAdmin):

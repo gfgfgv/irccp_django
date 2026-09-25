@@ -97,6 +97,30 @@
             <h3 class="serif">IRCCP</h3>
             <p>International Research Centre of Civil Protection — advancing scientific research for a safer world across all civil protection disciplines.</p>
           </div>
+
+          <!-- Раздел Partners с динамическим выводом из админки -->
+          <div class="footer-col">
+            <h4>Partners</h4>
+            <ul class="partner-list">
+              {% for partner in partners_list %}
+                <li class="partner-item">
+                  <span class="partner-name">{{ partner.name }}</span>
+                  <div class="partner-icons">
+                    {% for link in partner.links.all %}
+                      <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" title="{{ link.title }}">
+                        {% icon link.icon 14 %}
+                      </a>
+                    {% endfor %}
+                  </div>
+                </li>
+              {% empty %}
+                <li class="partner-item">
+                  <span class="partner-name" style="opacity: .5; font-size: .75rem;">No partners added</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+
           <div class="footer-col">
             <h4>Navigation</h4>
             <ul>
@@ -109,6 +133,7 @@
               <li><a href="{% url 'core:products' %}">Products</a></li>
             </ul>
           </div>
+
           <div class="footer-col">
             <h4>Categories</h4>
             <ul>
