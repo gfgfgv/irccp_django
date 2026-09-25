@@ -347,9 +347,17 @@ class PartnerLink(models.Model):
         ('globe', 'Website'),
         ('instagram', 'Instagram'),
         ('send', 'Telegram'),
-        ('share-2', 'Facebook/Social'),
+        ('facebook', 'Facebook'),
+        ('whatsapp', 'WhatsApp'),
+        ('youtube', 'YouTube'),
         ('linkedin', 'LinkedIn'),
+        ('twitter', 'Twitter / X'),
+        ('viber', 'Viber'),
+        ('tiktok', 'TikTok'),
+        ('github', 'GitHub'),
+        ('discord', 'Discord'),
         ('mail', 'Email'),
+        ('phone', 'Phone'),
     ]
 
     partner = models.ForeignKey(Partner, related_name='links', on_delete=models.CASCADE)
