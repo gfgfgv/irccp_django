@@ -14,6 +14,8 @@ class Category(models.TextChoices):
     DISASTER_MEDICINE = "Disaster Medicine", "Disaster Medicine"
     ENVIRONMENTAL_SAFETY = "Environmental Safety", "Environmental Safety"
     CRISIS_PSYCHOLOGY = "Crisis Psychology", "Crisis Psychology"
+    CYBER_AND_INFORMATION_SECURITY = "Cyber and information security", "Cyber and information security"
+    EMERGENCY_MANAGEMENT = "Emergency Management", "Emergency Management"
 
 
 CATEGORY_CONFIG = {
@@ -42,6 +44,14 @@ CATEGORY_CONFIG = {
         "bg": "#F5F3FF",
         "icon": "heart",
         "desc": "Psychological support, trauma recovery, stress management during emergencies."
+    },
+    Category.CYBER_AND_INFORMATION_SECURITY: {
+        "hex": "#0284C7", "bg": "#F0F9FF", "icon": "shield",
+        "desc": "Protection of critical information infrastructure, cyber resilience, hybrid threat mitigation, and data security."
+    },
+    Category.EMERGENCY_MANAGEMENT: {
+        "hex": "#D97706", "bg": "#FFFBEB", "icon": "building",
+        "desc": "Crisis coordination, risk assessment, disaster response planning, civil defense logistics, and inter-agency decision making."
     },
 }
 
