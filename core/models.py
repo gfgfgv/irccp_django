@@ -46,11 +46,11 @@ CATEGORY_CONFIG = {
         "desc": "Psychological support, trauma recovery, stress management during emergencies."
     },
     Category.CYBER_AND_INFORMATION_SECURITY: {
-        "hex": "#0284C7", "bg": "#F0F9FF", "icon": "shield",
+        "hex": "#D97706", "bg": "#FFFBEB", "icon": "building",
         "desc": "Protection of critical information infrastructure, cyber resilience, hybrid threat mitigation, and data security."
     },
     Category.EMERGENCY_MANAGEMENT: {
-        "hex": "#D97706", "bg": "#FFFBEB", "icon": "building",
+        "hex": "#0284C7", "bg": "#F0F9FF", "icon": "shield",
         "desc": "Crisis coordination, risk assessment, disaster response planning, civil defense logistics, and inter-agency decision making."
     },
 }
